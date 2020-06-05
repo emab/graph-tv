@@ -1,8 +1,24 @@
-import React from 'react'
-import Search from './Search'
+import React, { useState, useEffect } from 'react';
+import Search from './Search';
 
 const App = () => {
-    return <Search />
-}
+  const [selectedId, setSelectedId] = useState('');
+  const [results, setResults] = useState([]);
 
-export default App
+  useEffect(() => {
+      const getAllRatings = async () => {
+        const response = await fetch(`/api/ratings/${selectedId}`);
+        const ratingsJson = await response.json();
+        setResults(ratingsJson);
+      }
+      getAllRatings();
+  }, [selectedId])
+  return (
+    <>
+      <Search setSelectedId={setSelectedId} />
+      <p>{JSON.stringify(results)}</p>
+    </>
+  );
+};
+
+export default App;
