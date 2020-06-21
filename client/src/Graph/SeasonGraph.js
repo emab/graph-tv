@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
 
-const Graph = ({ data, h, w }) => {
+const SeasonGraph = ({ data, h, w }) => {
   const d3Container = useRef(null);
   const margin = { top: 10, right: 30, bottom: 30, left: 60 },
     height = h - margin.top - margin.bottom,
@@ -18,7 +18,7 @@ const Graph = ({ data, h, w }) => {
 
       const x = d3
         .scalePoint()
-        .domain(data.map((val) => val.episode))
+        .domain(data.map((val) => val.season))
         .range([0, width]);
       svg
         .append('g')
@@ -34,7 +34,7 @@ const Graph = ({ data, h, w }) => {
         .data(data)
         .enter()
         .append('circle')
-        .attr('cx', (d) => x(d.episode))
+        .attr('cx', (d) => x(d.season))
         .attr('cy', (d) => y(d.rating))
         .attr('r', 4)
         .style('fill', 'steelblue');
@@ -47,7 +47,7 @@ const Graph = ({ data, h, w }) => {
           `translate(${width / 2}, ${height + margin.top + 18})`
         )
         .style('text-anchor', 'middle')
-        .text('Episode');
+        .text('Season');
 
       // Y-axis label
       svg
@@ -68,4 +68,4 @@ const Graph = ({ data, h, w }) => {
   );
 };
 
-export default Graph;
+export default SeasonGraph;
