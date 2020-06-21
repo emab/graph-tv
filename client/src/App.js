@@ -8,10 +8,10 @@ const App = () => {
   const [results, setResults] = useState(null);
 
   useEffect(() => {
+    setResults(null);
     const getAllRatings = async () => {
       const response = await fetch(`/api/ratings/${selectedId}`);
       const ratingsJson = await response.json();
-      setResults({});
       setResults(ratingsJson);
     };
     getAllRatings();
