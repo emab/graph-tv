@@ -1,23 +1,28 @@
-const getBestEpisodeAndRating = => {
-  let bestEpisode;
-  let bestEpisodeRating = -1;
+const getBest = (type) => (data) => {
+  let number;
+  let rating = -1;
   data.forEach((val) => {
-    if (val.rating > bestEpisodeRating) {
-      bestEpisodeRating = val.rating;
-      bestEpisode = val.episode;
+    if (val.rating > rating) {
+      rating = val.rating;
+      number = val[type];
     }
   });
-  return { bestEpisode, bestEpisodeRating };
+  return { number, rating };
 };
 
-const getBestFromData = (data) => {
-  let best;
-  let bestRating = -1;
+const getWorst = (type) => (data) => {
+  let number;
+  let rating = 11;
   data.forEach((val) => {
-    if (val.rating > bestRating) {
-      bestRating = val.rating;
-      best = val.episode;
+    if (val.rating < rating) {
+      rating = val.rating;
+      number = val[type];
     }
   });
-  return { bestEpisode, bestEpisodeRating };
-}
+  return { number, rating };
+};
+
+export const getBestEpisode = getBest('episode');
+export const getWorstEpisode = getWorst('episode');
+export const getBestSeason = getBest('season');
+export const getWorstSeason = getWorst('season');

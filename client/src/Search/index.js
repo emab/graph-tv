@@ -28,6 +28,8 @@ const Search = ({ setSelectedId }) => {
 
   return (
     <SearchBar
+      fluid
+      size="big"
       loading={isLoading}
       onResultSelect={handleResultSelect}
       onSearchChange={handleSearchChange}

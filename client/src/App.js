@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Search from './Search';
 import GraphDisplay from './GraphDisplay';
-import { Loader } from 'semantic-ui-react';
+import { Loader, Container } from 'semantic-ui-react';
+import style from './App.module.css';
 
 const App = () => {
   const [selectedId, setSelectedId] = useState(null);
@@ -24,7 +25,10 @@ const App = () => {
 
   return (
     <>
-      <Search setSelectedId={setSelectedId} />
+      <div className={style.searchBar}>
+        <h1>Graph TV</h1>
+        <Search setSelectedId={setSelectedId} />
+      </div>
       {loading ? (
         <Loader active inline="centered">
           Loading IMDB Data...

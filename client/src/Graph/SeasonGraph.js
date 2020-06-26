@@ -1,5 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
+import { Grid } from 'semantic-ui-react';
+import { getBestSeason, getWorstSeason } from './dataTools';
 
 const SeasonGraph = ({ data, h, w }) => {
   const d3Container = useRef(null);
@@ -62,9 +64,17 @@ const SeasonGraph = ({ data, h, w }) => {
   }, [data]);
 
   return (
-    <>
-      <svg width={w} height={h} ref={d3Container}></svg>
-    </>
+    <Grid centered columns={3} verticalAlign="middle">
+      <Grid.Row>
+        <Grid.Column>
+          <svg width={w} height={h} ref={d3Container}></svg>
+        </Grid.Column>
+        <Grid.Column width={3}>
+          <p>Best season: {getBestSeason(data).number}</p>
+          <p>Worst season: {getWorstSeason(data).number}</p>
+        </Grid.Column>
+      </Grid.Row>
+    </Grid>
   );
 };
 

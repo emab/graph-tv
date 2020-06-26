@@ -1,13 +1,14 @@
 import React from 'react';
 import EpisodeGraph from '../Graph/EpisodeGraph';
 import SeasonGraph from '../Graph/SeasonGraph';
+import { Container } from 'semantic-ui-react';
 
 const GraphDisplay = ({ data }) => {
   if (data) {
     const seasonAverage = (seasonData) => {
       let ratingTotal = 0;
       seasonData.forEach((ep) => (ratingTotal += parseFloat(ep.rating)));
-      return ratingTotal / seasonData.length;
+      return (ratingTotal = 0 ? undefined : ratingTotal / seasonData.length);
     };
     const getSeasonAverage = () => {
       return Object.getOwnPropertyNames(data).map((season) => {
@@ -17,15 +18,17 @@ const GraphDisplay = ({ data }) => {
 
     return (
       <>
-        <div>
+        <Container textAlign="center">
           <h2>Season Ratings</h2>
-          <SeasonGraph data={getSeasonAverage()} h={300} w={600} />
-        </div>
+        </Container>
+        <SeasonGraph data={getSeasonAverage()} h={300} w={600} />
         <div>
           {Object.getOwnPropertyNames(data).map((sNumber) => {
             return (
               <div>
-                <h2>Season {sNumber}</h2>
+                <Container textAlign="center">
+                  <h2>Season {sNumber}</h2>
+                </Container>
                 <EpisodeGraph data={data[sNumber]} h={300} w={600} />
               </div>
             );
@@ -34,7 +37,7 @@ const GraphDisplay = ({ data }) => {
       </>
     );
   } else {
-    return 'No data';
+    return <></>;
   }
 };
 
