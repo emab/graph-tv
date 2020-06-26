@@ -1,6 +1,6 @@
-var express = require('express');
+import express from 'express';
 var router = express.Router();
-var imdb = require('js-imdb-scraper');
+import imdb from 'js-imdb-scraper';
 
 /* GET search results. */
 router.get('/search', (req, res, next) => {
@@ -40,4 +40,4 @@ const getSeasonRatings = async (showId, season) => {
   return ratingResults;
 };
 
-module.exports = router;
+export default router;
