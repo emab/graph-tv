@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Search as SearchBar } from 'semantic-ui-react';
+import useDebounce from '../hooks/useDebounce';
 
 const Search = ({ setSelectedId }) => {
   const [results, setResults] = useState([]);
-  const [value, setValue] = useState('');
+  const [searchValue, setSearchValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const debouncedSearchValue = useDebounce(searchValue, 750);
 
   const handleResultSelect = (e, { result }) => {
-    setValue(result.title);
+    setSearchValue(result.title);
     setSelectedId(result.id);
   };
 
   const handleSearchChange = (e, { value }) => {
     setIsLoading(true);
-    setValue(value);
+    setSearchValue(value);
   };
 
   useEffect(() => {
@@ -23,8 +25,8 @@ const Search = ({ setSelectedId }) => {
       setResults(resultJson);
       setIsLoading(false);
     };
-    getResults(value);
-  }, [value]);
+    getResults(debouncedSearchValue);
+  }, [debouncedSearchValue]);
 
   return (
     <SearchBar
@@ -34,7 +36,7 @@ const Search = ({ setSelectedId }) => {
       onResultSelect={handleResultSelect}
       onSearchChange={handleSearchChange}
       results={results}
-      value={value}
+      value={searchValue}
     />
   );
 };
