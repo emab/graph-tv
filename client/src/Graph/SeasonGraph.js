@@ -22,8 +22,10 @@ const SeasonGraph = ({ data, h, w }) => {
         .scalePoint()
         .domain(data.map((val) => val.season))
         .range([0, width]);
+
       svg
         .append('g')
+        .attr('class', 'xAxis')
         .attr('transform', `translate(0, ${height})`)
         .call(d3.axisBottom(x));
 
@@ -38,8 +40,7 @@ const SeasonGraph = ({ data, h, w }) => {
         .append('circle')
         .attr('cx', (d) => x(d.season))
         .attr('cy', (d) => y(d.rating))
-        .attr('r', 4)
-        .style('fill', 'steelblue');
+        .attr('r', 4);
 
       // X-axis label
       svg
@@ -61,13 +62,13 @@ const SeasonGraph = ({ data, h, w }) => {
         .style('text-anchor', 'middle')
         .text('Rating');
     }
-  }, [data]);
+  }, [data, height, width, margin]);
 
   return (
     <Grid centered columns={3} verticalAlign="middle">
       <Grid.Row>
         <Grid.Column>
-          <svg width={w} height={h} ref={d3Container}></svg>
+          <svg width={w} height={h} ref={d3Container} cl></svg>
         </Grid.Column>
         <Grid.Column width={3}>
           <p>Best season: {getBestSeason(data).number}</p>

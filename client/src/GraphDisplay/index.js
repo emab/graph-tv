@@ -3,6 +3,8 @@ import EpisodeGraph from '../Graph/EpisodeGraph';
 import SeasonGraph from '../Graph/SeasonGraph';
 import { Container } from 'semantic-ui-react';
 
+import style from './graphDisplay.module.css';
+
 const GraphDisplay = ({ data }) => {
   if (data) {
     const seasonAverage = (seasonData) => {
@@ -18,14 +20,16 @@ const GraphDisplay = ({ data }) => {
 
     return (
       <>
-        <Container textAlign="center">
-          <h2>Season Ratings</h2>
-        </Container>
-        <SeasonGraph data={getSeasonAverage()} h={300} w={600} />
+        <div className={style.overview}>
+          <Container textAlign="center">
+            <h2>Average Season Ratings</h2>
+          </Container>
+          <SeasonGraph data={getSeasonAverage()} h={300} w={600} />
+        </div>
         <div>
           {Object.getOwnPropertyNames(data).map((sNumber) => {
             return (
-              <div>
+              <div key={sNumber} className={style.season}>
                 <Container textAlign="center">
                   <h2>Season {sNumber}</h2>
                 </Container>

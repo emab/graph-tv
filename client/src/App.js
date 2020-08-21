@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Search from './Search';
 import GraphDisplay from './GraphDisplay';
-import { Loader, Container } from 'semantic-ui-react';
+import { Loader, Transition } from 'semantic-ui-react';
 import style from './App.module.css';
 
 const App = () => {
@@ -30,11 +30,15 @@ const App = () => {
         <Search setSelectedId={setSelectedId} />
       </div>
       {loading ? (
-        <Loader active inline="centered">
-          Loading IMDB Data...
-        </Loader>
+        <div className={style.loader}>
+          <Loader active inline="centered">
+            Loading IMDB Data...
+          </Loader>
+        </div>
       ) : (
-        <GraphDisplay data={results} />
+        <Transition visible={!loading} animation="scale" duration={500}>
+          <GraphDisplay data={results} />
+        </Transition>
       )}
     </>
   );

@@ -38,9 +38,8 @@ const EpisodeGraph = ({ data, h, w }) => {
         .append('circle')
         .attr('cx', (d) => x(d.episode))
         .attr('cy', (d) => y(d.rating))
-        .attr('r', 4)
-        .style('fill', 'steelblue');
-
+        .attr('r', 4);
+        
       // X-axis label
       svg
         .append('text')
@@ -61,7 +60,7 @@ const EpisodeGraph = ({ data, h, w }) => {
         .style('text-anchor', 'middle')
         .text('Rating');
     }
-  }, [data]);
+  }, [data, height, margin, width]);
 
   return (
     <Grid centered columns={3} verticalAlign="middle">
