@@ -5,6 +5,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #021534;
+  color: #fff;
 }
 
 code {
@@ -16,6 +18,27 @@ path, line {
   stroke: white;
 }
 
-circle, text {
+text {
   fill: white;
+}
+
+div.tooltip {
+  position: absolute;
+  text-align: center;
+  padding: 5px;
+  font: 12px sans-serif;
+  background: #001e59;
+  border: 0;
+  border-radius: 5px;
+  pointer-events: none;
+  color: white;
+  opacity: 0;
+}
+
+.flex {
+  display: flex;
+}
+
+.justify-center {
+  justify-content: center;
 }

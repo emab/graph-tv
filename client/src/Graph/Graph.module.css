@@ -1,0 +1,14 @@
+.container {
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+    align-content: center;
+    margin-top: 10px;
+}
+
+.containerCol {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 10px;
+}

@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Search from './Search';
 import GraphDisplay from './GraphDisplay';
 import { Loader, Transition } from 'semantic-ui-react';
 import style from './App.module.css';
+import { Seasons } from './types';
+import * as d3 from 'd3';
 
 const App = () => {
   const [selectedId, setSelectedId] = useState(null);
-  const [results, setResults] = useState(null);
+  const [results, setResults] = useState<Seasons>();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setResults(null);
+    setResults(undefined);
     const getAllRatings = async () => {
       setLoading(true);
       const response = await fetch(`/api/ratings/${selectedId}`);
@@ -23,6 +25,10 @@ const App = () => {
     }
   }, [selectedId]);
 
+  useEffect(() => {
+    d3.select('body').append('div').attr('class', 'tooltip');
+  }, []);
+
   return (
     <>
       <div className={style.searchBar}>
@@ -31,12 +37,12 @@ const App = () => {
       </div>
       {loading ? (
         <div className={style.loader}>
-          <Loader active inline="centered">
+          <Loader active inline='centered'>
             Loading IMDB Data...
           </Loader>
         </div>
       ) : (
-        <Transition visible={!loading} animation="scale" duration={500}>
+        <Transition visible={!loading} animation='scale' duration={500}>
           <GraphDisplay data={results} />
         </Transition>
       )}

@@ -2,17 +2,25 @@
 .season {
   color: white;
   padding: 50px 0;
-  -webkit-box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.75);
-  box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.75);
-  margin: 20px 5%;
+  -webkit-box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.75);
+  box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.75);
+  margin: 20px 30px;
+  border-radius: 10px;
 }
 
 .overview {
-  background-color: #007ea7;
+  background-color: #003780;
   margin-bottom: 70px;
 }
 
 .season {
-  background-color: #00a8e8;
+  background-color: #0a2fc7;
+}
+
+.heading {
+  color: white;
+  font-size: 1.5em;
+  text-align: center;
+  margin-left: 10px;
 }
