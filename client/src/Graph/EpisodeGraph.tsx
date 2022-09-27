@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import { getBestEpisode, getWorstEpisode } from './dataTools';
 import { EpisodeData } from '../types';
 import style from './Graph.module.css';
+import { calculateMean, createLOBF } from './createLOBF';
 
 const EpisodeGraph = ({
   data,
@@ -40,6 +41,13 @@ const EpisodeGraph = ({
         .call(d3.axisBottom(x));
 
       const y = d3.scaleLinear().domain([0, 10]).range([height, 0]);
+
+      createLOBF(
+        data.map(({ episode, rating }) => ({ x: episode, y: rating })),
+        svg,
+        x,
+        y
+      );
 
       svg.append('g').call(d3.axisLeft(y));
 
@@ -98,6 +106,10 @@ const EpisodeGraph = ({
       <div className={style.container}>
         <div className="flex justify-center">
           Best episode: {getBestEpisode(data).number}
+        </div>
+        <div className="flex justify-center">
+          Average rating:{' '}
+          {calculateMean(data.map(({ rating }) => rating)).toFixed(2)}
         </div>
         <div className="flex justify-center">
           Worst episode: {getWorstEpisode(data).number}

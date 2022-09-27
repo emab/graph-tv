@@ -3,6 +3,7 @@ import { getBestSeason, getWorstSeason } from './dataTools';
 import * as d3 from 'd3';
 import style from './Graph.module.css';
 import { SeasonData } from '../types';
+import { createLOBF } from './createLOBF';
 
 const SeasonGraph = ({
   data,
@@ -43,12 +44,20 @@ const SeasonGraph = ({
       const y = d3.scaleLinear().domain([0, 10]).range([height, 0]);
       svg.append('g').call(d3.axisLeft(y));
 
+      createLOBF(
+        data.map(({ season, rating }) => ({ x: season, y: rating })),
+        svg,
+        x,
+        y
+      );
+
       svg
         .append('g')
         .selectAll('dot')
         .data(data)
         .enter()
         .append('circle')
+        .style('z-index', 1)
         .attr('cx', (d) => x(String(d.season)) ?? '')
         .attr('cy', (d) => y(Number(d.rating) ?? 0) ?? 0)
         .attr('r', 4)
