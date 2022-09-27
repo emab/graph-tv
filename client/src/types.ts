@@ -6,8 +6,8 @@ export type EpisodeData = {
 export type SeasonData = {
   season: number;
   rating: string;
-}
+};
 
 export type Seasons = {
   [season: string]: EpisodeData[];
-}
+};

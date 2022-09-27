@@ -4,7 +4,15 @@ import { getBestEpisode, getWorstEpisode } from './dataTools';
 import { EpisodeData } from '../types';
 import style from './Graph.module.css';
 
-const EpisodeGraph = ({ data, h, w }: { data: EpisodeData[], h: number, w: number }) => {
+const EpisodeGraph = ({
+  data,
+  h,
+  w,
+}: {
+  data: EpisodeData[];
+  h: number;
+  w: number;
+}) => {
   const d3Container = useRef(null);
   const margin = { top: 10, right: 30, bottom: 30, left: 60 },
     height = h - margin.top - margin.bottom,
@@ -12,7 +20,6 @@ const EpisodeGraph = ({ data, h, w }: { data: EpisodeData[], h: number, w: numbe
 
   useEffect(() => {
     if (d3Container.current && data) {
-
       d3.select(d3Container.current).selectAll('*').remove();
 
       const div = d3.select('div.tooltip');
@@ -37,30 +44,28 @@ const EpisodeGraph = ({ data, h, w }: { data: EpisodeData[], h: number, w: numbe
       svg.append('g').call(d3.axisLeft(y));
 
       // add the dots with tooltips
-      svg.selectAll('dot')
+      svg
+        .selectAll('dot')
         .data(data)
-        .enter().append('circle')
+        .enter()
+        .append('circle')
         .attr('r', 5)
-        .attr('cx', (d) => (x(String(d.episode))) ?? '')
+        .attr('cx', (d) => x(String(d.episode)) ?? '')
         .attr('cy', (d) => y(Number(d.rating)))
         .attr('fill', 'white')
-        .on('mouseover', function(event, d) {
+        .on('mouseover', function (event, d) {
           d3.select(this).attr('r', 10).attr('fill', '#4778de');
-          div.transition()
-            .duration(200)
-            .style('opacity', .9);
-          div.html('Episode: ' + d.episode + '<br/>' + 'Rating: ' + d.rating)
-            .style('left', (event.clientX + 20) + 'px')
-            .style('top', (event.clientY - 28) + 'px')
+          div.transition().duration(200).style('opacity', 0.9);
+          div
+            .html('Episode: ' + d.episode + '<br/>' + 'Rating: ' + d.rating)
+            .style('left', event.clientX + 20 + 'px')
+            .style('top', event.clientY - 28 + 'px')
             .style('position', 'fixed')
             .style('z-index', '10');
-
         })
-        .on('mouseout', function() {
+        .on('mouseout', function () {
           d3.select(this).attr('r', 5).attr('fill', 'white');
-          div.transition()
-            .duration(500)
-            .style('opacity', 0);
+          div.transition().duration(500).style('opacity', 0);
         });
 
       // X-axis label
@@ -68,7 +73,7 @@ const EpisodeGraph = ({ data, h, w }: { data: EpisodeData[], h: number, w: numbe
         .append('text')
         .attr(
           'transform',
-          `translate(${width / 2}, ${height + margin.top + 18})`,
+          `translate(${width / 2}, ${height + margin.top + 18})`
         )
         .style('text-anchor', 'middle')
         .text('Episode');
@@ -91,8 +96,12 @@ const EpisodeGraph = ({ data, h, w }: { data: EpisodeData[], h: number, w: numbe
         <svg width={w} height={h} ref={d3Container} />
       </div>
       <div className={style.container}>
-        <div className="flex justify-center">Best episode: {getBestEpisode(data).number}</div>
-        <div className="flex justify-center">Worst episode: {getWorstEpisode(data).number}</div>
+        <div className="flex justify-center">
+          Best episode: {getBestEpisode(data).number}
+        </div>
+        <div className="flex justify-center">
+          Worst episode: {getWorstEpisode(data).number}
+        </div>
       </div>
     </div>
   );

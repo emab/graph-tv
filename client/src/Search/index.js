@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Search as SearchBar } from 'semantic-ui-react';
 import useDebounce from '../hooks/useDebounce';
 

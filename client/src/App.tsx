@@ -37,12 +37,12 @@ const App = () => {
       </div>
       {loading ? (
         <div className={style.loader}>
-          <Loader active inline='centered'>
+          <Loader active inline="centered">
             Loading IMDB Data...
           </Loader>
         </div>
       ) : (
-        <Transition visible={!loading} animation='scale' duration={500}>
+        <Transition visible={!loading} animation="scale" duration={500}>
           <GraphDisplay data={results} />
         </Transition>
       )}

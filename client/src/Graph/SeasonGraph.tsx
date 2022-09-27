@@ -5,10 +5,14 @@ import style from './Graph.module.css';
 import { SeasonData } from '../types';
 
 const SeasonGraph = ({
-                       data,
-                       h,
-                       w,
-                     }: { data: SeasonData[], h: number, w: number }) => {
+  data,
+  h,
+  w,
+}: {
+  data: SeasonData[];
+  h: number;
+  w: number;
+}) => {
   const d3Container = useRef(null);
   const margin = { top: 10, right: 30, bottom: 30, left: 60 },
     height = h - margin.top - margin.bottom,
@@ -16,7 +20,6 @@ const SeasonGraph = ({
 
   useEffect(() => {
     if (d3Container.current && data) {
-
       d3.select(d3Container.current).selectAll('*').remove();
 
       const div = d3.select('div.tooltip');
@@ -46,26 +49,23 @@ const SeasonGraph = ({
         .data(data)
         .enter()
         .append('circle')
-        .attr('cx', (d) => (x(String(d.season)) ?? ''))
-        .attr('cy', (d) => (y(Number(d.rating) ?? 0) ?? 0))
+        .attr('cx', (d) => x(String(d.season)) ?? '')
+        .attr('cy', (d) => y(Number(d.rating) ?? 0) ?? 0)
         .attr('r', 4)
         .attr('fill', 'white')
-        .on('mouseover', function(event, d) {
+        .on('mouseover', function (event, d) {
           d3.select(this).attr('r', 10).attr('fill', '#4778de');
-          div.transition()
-            .duration(200)
-            .style('opacity', .9);
-          div.html('Season: ' + d.season + '<br/>' + 'Rating: ' + d.rating)
-            .style('left', (event.clientX + 20) + 'px')
-            .style('top', (event.clientY - 28) + 'px')
+          div.transition().duration(200).style('opacity', 0.9);
+          div
+            .html('Season: ' + d.season + '<br/>' + 'Rating: ' + d.rating)
+            .style('left', event.clientX + 20 + 'px')
+            .style('top', event.clientY - 28 + 'px')
             .style('position', 'fixed')
             .style('z-index', '10');
         })
-        .on('mouseout', function() {
+        .on('mouseout', function () {
           d3.select(this).attr('r', 5).attr('fill', 'white');
-          div.transition()
-            .duration(500)
-            .style('opacity', 0);
+          div.transition().duration(500).style('opacity', 0);
         });
 
       // X-axis label
@@ -73,7 +73,7 @@ const SeasonGraph = ({
         .append('text')
         .attr(
           'transform',
-          `translate(${width / 2}, ${height + margin.top + 18})`,
+          `translate(${width / 2}, ${height + margin.top + 18})`
         )
         .style('text-anchor', 'middle')
         .text('Season');
@@ -96,8 +96,12 @@ const SeasonGraph = ({
         <svg width={w} height={h} ref={d3Container} />
       </div>
       <div className={style.container}>
-        <div className='flex justify-center'>Best season: {getBestSeason(data).number}</div>
-        <div className='flex justify-center'>Worst season: {getWorstSeason(data).number}</div>
+        <div className="flex justify-center">
+          Best season: {getBestSeason(data).number}
+        </div>
+        <div className="flex justify-center">
+          Worst season: {getWorstSeason(data).number}
+        </div>
       </div>
     </div>
   );

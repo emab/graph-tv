@@ -1,44 +1,44 @@
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #021534;
-  color: #fff;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #021534;
+    color: #fff;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
 
 path, line {
-  stroke: white;
+    stroke: white;
 }
 
 text {
-  fill: white;
+    fill: white;
 }
 
 div.tooltip {
-  position: absolute;
-  text-align: center;
-  padding: 5px;
-  font: 12px sans-serif;
-  background: #001e59;
-  border: 0;
-  border-radius: 5px;
-  pointer-events: none;
-  color: white;
-  opacity: 0;
+    position: absolute;
+    text-align: center;
+    padding: 5px;
+    font: 12px sans-serif;
+    background: #001e59;
+    border: 0;
+    border-radius: 5px;
+    pointer-events: none;
+    color: white;
+    opacity: 0;
 }
 
 .flex {
-  display: flex;
+    display: flex;
 }
 
 .justify-center {
-  justify-content: center;
+    justify-content: center;
 }

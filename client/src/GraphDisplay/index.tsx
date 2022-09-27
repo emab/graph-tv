@@ -12,13 +12,17 @@ const GraphDisplay = ({ data }: { data: Seasons | undefined }) => {
   const [graphWidth, setGraphWidth] = React.useState(getGraphWidth());
   if (data) {
     const seasonAverage = (episodeData: EpisodeData[]): string => {
-
       const ratingTotal = episodeData.reduce(
         (acc, curr) => acc + Number(curr.rating),
-        0,
+        0
       );
 
-      return String((ratingTotal === 0 ? undefined : ratingTotal / episodeData.length)?.toFixed(2));
+      return String(
+        (ratingTotal === 0
+          ? undefined
+          : ratingTotal / episodeData.length
+        )?.toFixed(2)
+      );
     };
 
     const getSeasonAverage = (): SeasonData[] => {
@@ -51,10 +55,14 @@ const GraphDisplay = ({ data }: { data: Seasons | undefined }) => {
           {Object.getOwnPropertyNames(data).map((seasonNumber) => {
             return (
               <div key={seasonNumber} className={style.season}>
-                <Container textAlign='center'>
+                <Container textAlign="center">
                   <h2>Season {seasonNumber}</h2>
                 </Container>
-                <EpisodeGraph data={data[seasonNumber]} h={300} w={graphWidth} />
+                <EpisodeGraph
+                  data={data[seasonNumber]}
+                  h={300}
+                  w={graphWidth}
+                />
               </div>
             );
           })}
