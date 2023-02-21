@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import EpisodeGraph from '../Graph/EpisodeGraph';
-import SeasonGraph from '../Graph/SeasonGraph';
+import EpisodeGraph from './Graph/EpisodeGraph';
+import SeasonGraph from './Graph/SeasonGraph';
 import { Container } from 'semantic-ui-react';
 
-import style from './graphDisplay.module.css';
-import { EpisodeData, SeasonData, Seasons } from '../types';
+import style from './GraphDisplay.module.css';
+import { EpisodeData, SeasonData, Seasons } from '../../src/types';
 
 const getGraphWidth = (): number => window.innerWidth - 100;
 

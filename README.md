@@ -1,25 +1,38 @@
-# graph-tv
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## <http://graphtv.devbrown.com>
+## Getting Started
 
-## Description
+First, run the development server:
 
-An attempted recreation of this website: <http://graphtv.kevinformatics.com/>. It unfortunately went offline a while ago
-and newer sites don't look as nice.
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+```
 
-The aim is to be able to search for a TV show and have all its seasons ratings shown on a pretty graph. It should be
-easy to use and have a simplistic design.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Front-end
+You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
 
-The front-end is built with [React](https://reactjs.org/). I'm also using [Semantic UI](https://react.semantic-ui.com/)
-for my basic components. I'll be using [D3](https://d3js.org/) to draw a (hopefully) pretty graph.
+[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
 
-## Back-end
+The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
-The React app is served using [Express](https://expressjs.com/), which also exposes the API endpoints which gets the
-IMDB show data.
+This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-To get the IMDB data, I made a simple [scraper](https://github.com/emab/js-imdb-scraper) to fetch the search pages and
-return results. The IMDB API could be used here as it is currently free for up to 1000 requests per day. In the future I
-may use the API by default and switch to the scraper if the request limit is reached.
+## Learn More
+
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.

@@ -1,16 +1,16 @@
 import React, { useEffect, useRef } from 'react';
-import { getBestSeason, getWorstSeason } from './dataTools';
 import * as d3 from 'd3';
+import { getBestEpisode, getWorstEpisode } from './dataTools';
+import { EpisodeData } from '../../../src/types';
 import style from './Graph.module.css';
-import { SeasonData } from '../types';
-import { createLOBF } from './createLOBF';
+import { calculateMean, createLOBF } from './createLOBF';
 
-const SeasonGraph = ({
+const EpisodeGraph = ({
   data,
   h,
   w,
 }: {
-  data: SeasonData[];
+  data: EpisodeData[];
   h: number;
   w: number;
 }) => {
@@ -32,41 +32,40 @@ const SeasonGraph = ({
 
       const x = d3
         .scalePoint()
-        .domain(['', ...data.map((val) => String(val.season))])
+        .domain(['', ...data.map((val) => String(val.episode))])
         .range([0, width]);
 
       svg
         .append('g')
-        .attr('class', 'xAxis')
         .attr('transform', `translate(0, ${height})`)
         .call(d3.axisBottom(x));
 
       const y = d3.scaleLinear().domain([0, 10]).range([height, 0]);
-      svg.append('g').call(d3.axisLeft(y));
 
       createLOBF(
-        data.map(({ season, rating }) => ({ x: season, y: rating })),
+        data.map(({ episode, rating }) => ({ x: episode, y: rating })),
         svg,
         x,
         y
       );
 
+      svg.append('g').call(d3.axisLeft(y));
+
+      // add the dots with tooltips
       svg
-        .append('g')
         .selectAll('dot')
         .data(data)
         .enter()
         .append('circle')
-        .style('z-index', 1)
-        .attr('cx', (d) => x(String(d.season)) ?? '')
-        .attr('cy', (d) => y(Number(d.rating) ?? 0) ?? 0)
-        .attr('r', 4)
+        .attr('r', 5)
+        .attr('cx', (d) => x(String(d.episode)) ?? '')
+        .attr('cy', (d) => y(Number(d.rating)))
         .attr('fill', 'white')
         .on('mouseover', function (event, d) {
           d3.select(this).attr('r', 10).attr('fill', '#4778de');
           div.transition().duration(200).style('opacity', 0.9);
           div
-            .html('Season: ' + d.season + '<br/>' + 'Rating: ' + d.rating)
+            .html('Episode: ' + d.episode + '<br/>' + 'Rating: ' + d.rating)
             .style('left', event.clientX + 20 + 'px')
             .style('top', event.clientY - 28 + 'px')
             .style('position', 'fixed')
@@ -85,7 +84,7 @@ const SeasonGraph = ({
           `translate(${width / 2}, ${height + margin.top + 18})`
         )
         .style('text-anchor', 'middle')
-        .text('Season');
+        .text('Episode');
 
       // Y-axis label
       svg
@@ -97,7 +96,7 @@ const SeasonGraph = ({
         .style('text-anchor', 'middle')
         .text('Rating');
     }
-  }, [data, height, width, margin]);
+  }, [data, height, margin, width]);
 
   return (
     <div>
@@ -106,14 +105,18 @@ const SeasonGraph = ({
       </div>
       <div className={style.container}>
         <div className="flex justify-center">
-          Best season: {getBestSeason(data).number}
+          Best episode: {getBestEpisode(data).number}
         </div>
         <div className="flex justify-center">
-          Worst season: {getWorstSeason(data).number}
+          Average rating:{' '}
+          {calculateMean(data.map(({ rating }) => rating)).toFixed(2)}
+        </div>
+        <div className="flex justify-center">
+          Worst episode: {getWorstEpisode(data).number}
         </div>
       </div>
     </div>
   );
 };
 
-export default SeasonGraph;
+export default EpisodeGraph;

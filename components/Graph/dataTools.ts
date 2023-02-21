@@ -1,4 +1,4 @@
-import { EpisodeData, SeasonData } from '../types';
+import { EpisodeData, SeasonData } from '../../../src/types';
 
 const getBest =
   <T extends { rating: string }>(type: keyof T) =>
