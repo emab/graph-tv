@@ -19,8 +19,6 @@ const calculateLOBF = (
     { XValues: [], YValues: [] } as { XValues: number[]; YValues: number[] }
   );
 
-  console.log(XValues, YValues);
-
   const meanX = calculateMean(XValues);
   const meanY = calculateMean(YValues);
 

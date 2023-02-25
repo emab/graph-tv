@@ -1,77 +1,69 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import EpisodeGraph from './Graph/EpisodeGraph';
 import SeasonGraph from './Graph/SeasonGraph';
-import { Container } from 'semantic-ui-react';
+import { SeasonAverageData, SeasonEpisodeData } from '@/types/searchResult';
 
-import style from './GraphDisplay.module.css';
-import { EpisodeData, SeasonData, Seasons } from '../../src/types';
+const getGraphWidth = (container: HTMLDivElement): number =>
+  container?.clientWidth - 50 ?? 0;
 
-const getGraphWidth = (): number => window.innerWidth - 100;
+export type Data = {
+  seasonAverageRatings: SeasonAverageData[];
+  seasonEpisodeRatings: SeasonEpisodeData[];
+};
 
-const GraphDisplay = ({ data }: { data: Seasons | undefined }) => {
-  const [graphWidth, setGraphWidth] = React.useState(getGraphWidth());
-  if (data) {
-    const seasonAverage = (episodeData: EpisodeData[]): string => {
-      const ratingTotal = episodeData.reduce(
-        (acc, curr) => acc + Number(curr.rating),
-        0
-      );
+const GraphDisplay = ({ data }: { data: Data }) => {
+  const ref = useRef(null);
+  const [graphWidth, setGraphWidth] = useState(0);
 
-      return String(
-        (ratingTotal === 0
-          ? undefined
-          : ratingTotal / episodeData.length
-        )?.toFixed(2)
-      );
+  useEffect(() => {
+    const currentRef = ref.current;
+    if (!currentRef) {
+      return;
+    }
+    const updateGraphWidth = () => {
+      setGraphWidth(getGraphWidth(currentRef));
     };
 
-    const getSeasonAverage = (): SeasonData[] => {
-      return Object.keys(data).map((season) => {
-        return { season: Number(season), rating: seasonAverage(data[season]) };
-      });
+    window.addEventListener('resize', updateGraphWidth);
+
+    return () => {
+      window.removeEventListener('resize', updateGraphWidth);
     };
+  }, []);
 
-    useEffect(() => {
-      const updateGraphWidth = () => {
-        setGraphWidth(getGraphWidth());
-      };
+  useEffect(() => {
+    if (ref.current) {
+      setGraphWidth(getGraphWidth(ref.current));
+    }
+  }, []);
 
-      window.addEventListener('resize', updateGraphWidth);
-
-      return () => {
-        window.removeEventListener('resize', updateGraphWidth);
-      };
-    }, []);
-
-    return (
-      <>
-        <h2 className={style.heading}>Average Season Ratings</h2>
-        <div className={style.overview}>
-          <SeasonGraph data={getSeasonAverage()} h={300} w={graphWidth} />
-        </div>
-        <div>
-          <h2 className={style.heading}>Season Ratings</h2>
-
-          {Object.getOwnPropertyNames(data).map((seasonNumber) => {
-            return (
-              <div key={seasonNumber} className={style.season}>
-                <Container textAlign="center">
-                  <h2>Season {seasonNumber}</h2>
-                </Container>
-                <EpisodeGraph
-                  data={data[seasonNumber]}
-                  h={300}
-                  w={graphWidth}
-                />
-              </div>
-            );
-          })}
-        </div>
-      </>
-    );
-  } else {
-    return <></>;
-  }
+  return (
+    <div className="m-5 max-w-6xl mx-auto" ref={ref}>
+      <h2 className="text-2xl text-center text-white mb-2">
+        Average Season Ratings
+      </h2>
+      <SeasonGraph
+        data={data?.seasonAverageRatings ?? []}
+        h={300}
+        w={graphWidth}
+      />
+      <div className="mt-10">
+        <h2 className="text-2xl text-white text-center mb-2">Season Ratings</h2>
+        {data?.seasonEpisodeRatings.map((seasonEpisodes, index) => {
+          return (
+            <div key={seasonEpisodes.map((sep) => sep.rating).join('-')}>
+              <EpisodeGraph
+                seasonNumber={index + 1}
+                data={seasonEpisodes}
+                h={300}
+                w={graphWidth}
+              />
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 };
 
 export default GraphDisplay;

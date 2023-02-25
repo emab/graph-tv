@@ -1,23 +1,25 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { getBestEpisode, getWorstEpisode } from './dataTools';
-import { EpisodeData } from '../../../src/types';
-import style from './Graph.module.css';
 import { calculateMean, createLOBF } from './createLOBF';
+import { SeasonEpisodeData } from '@/types/searchResult';
+
+const margin = { top: 10, right: 30, bottom: 30, left: 60 };
 
 const EpisodeGraph = ({
+  seasonNumber,
   data,
   h,
   w,
 }: {
-  data: EpisodeData[];
+  seasonNumber: number;
+  data: SeasonEpisodeData;
   h: number;
   w: number;
 }) => {
   const d3Container = useRef(null);
-  const margin = { top: 10, right: 30, bottom: 30, left: 60 },
-    height = h - margin.top - margin.bottom,
-    width = w - margin.left - margin.right;
+  const height = h - margin.top - margin.bottom;
+  const width = w - margin.left - margin.right;
 
   useEffect(() => {
     if (d3Container.current && data) {
@@ -28,6 +30,7 @@ const EpisodeGraph = ({
       const svg = d3
         .select(d3Container.current)
         .append('g')
+        .attr('class', 'text-white')
         .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
       const x = d3
@@ -38,6 +41,7 @@ const EpisodeGraph = ({
       svg
         .append('g')
         .attr('transform', `translate(0, ${height})`)
+        .attr('class', 'text-white')
         .call(d3.axisBottom(x));
 
       const y = d3.scaleLinear().domain([0, 10]).range([height, 0]);
@@ -81,9 +85,10 @@ const EpisodeGraph = ({
         .append('text')
         .attr(
           'transform',
-          `translate(${width / 2}, ${height + margin.top + 18})`
+          `translate(${width / 2}, ${height + margin.top + 19})`
         )
         .style('text-anchor', 'middle')
+        .attr('class', 'fill-white text-sm')
         .text('Episode');
 
       // Y-axis label
@@ -94,26 +99,24 @@ const EpisodeGraph = ({
         .attr('x', 0 - height / 2)
         .attr('dy', '1em')
         .style('text-anchor', 'middle')
+        .attr('class', 'fill-white text-sm')
         .text('Rating');
     }
-  }, [data, height, margin, width]);
+  }, [data, height, width]);
 
   return (
-    <div>
-      <div className={style.container}>
-        <svg width={w} height={h} ref={d3Container} />
-      </div>
-      <div className={style.container}>
-        <div className="flex justify-center">
-          Best episode: {getBestEpisode(data).number}
-        </div>
-        <div className="flex justify-center">
+    <div className="bg-blue-700 p-5 shadow-2xl rounded mb-10">
+      <h2 className="text-xl text-center text-white my-2">
+        Season {seasonNumber}
+      </h2>
+      <svg width={w} height={h} ref={d3Container} />
+      <div className="py-3 flex justify-evenly text-neutral-50">
+        <div>Best episode: {getBestEpisode(data).number}</div>
+        <div>
           Average rating:{' '}
           {calculateMean(data.map(({ rating }) => rating)).toFixed(2)}
         </div>
-        <div className="flex justify-center">
-          Worst episode: {getWorstEpisode(data).number}
-        </div>
+        <div>Worst episode: {getWorstEpisode(data).number}</div>
       </div>
     </div>
   );

@@ -1,23 +1,23 @@
 import React, { useEffect, useRef } from 'react';
 import { getBestSeason, getWorstSeason } from './dataTools';
 import * as d3 from 'd3';
-import style from './Graph.module.css';
-import { SeasonData } from '../../../src/types';
 import { createLOBF } from './createLOBF';
+import { SeasonAverageData } from '@/types/searchResult';
 
-const SeasonGraph = ({
+const margin = { top: 10, right: 30, bottom: 30, left: 60 };
+
+export const SeasonGraph = ({
   data,
   h,
   w,
 }: {
-  data: SeasonData[];
+  data: SeasonAverageData[];
   h: number;
   w: number;
 }) => {
   const d3Container = useRef(null);
-  const margin = { top: 10, right: 30, bottom: 30, left: 60 },
-    height = h - margin.top - margin.bottom,
-    width = w - margin.left - margin.right;
+  const height = h - margin.top - margin.bottom;
+  const width = w - margin.left - margin.right;
 
   useEffect(() => {
     if (d3Container.current && data) {
@@ -28,6 +28,7 @@ const SeasonGraph = ({
       const svg = d3
         .select(d3Container.current)
         .append('g')
+        .attr('class', 'text-white')
         .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
       const x = d3
@@ -37,7 +38,7 @@ const SeasonGraph = ({
 
       svg
         .append('g')
-        .attr('class', 'xAxis')
+        .attr('class', 'text-white')
         .attr('transform', `translate(0, ${height})`)
         .call(d3.axisBottom(x));
 
@@ -82,9 +83,10 @@ const SeasonGraph = ({
         .append('text')
         .attr(
           'transform',
-          `translate(${width / 2}, ${height + margin.top + 18})`
+          `translate(${width / 2}, ${height + margin.top + 20})`
         )
         .style('text-anchor', 'middle')
+        .attr('class', 'fill-white text-sm')
         .text('Season');
 
       // Y-axis label
@@ -95,22 +97,17 @@ const SeasonGraph = ({
         .attr('x', 0 - height / 2)
         .attr('dy', '1em')
         .style('text-anchor', 'middle')
+        .attr('class', 'fill-white')
         .text('Rating');
     }
-  }, [data, height, width, margin]);
+  }, [data, height, width]);
 
   return (
-    <div>
-      <div className={style.container}>
-        <svg width={w} height={h} ref={d3Container} />
-      </div>
-      <div className={style.container}>
-        <div className="flex justify-center">
-          Best season: {getBestSeason(data).number}
-        </div>
-        <div className="flex justify-center">
-          Worst season: {getWorstSeason(data).number}
-        </div>
+    <div className="bg-blue-600 p-5 shadow-2xl rounded">
+      <svg width={w} height={h} ref={d3Container} />
+      <div className="py-3 flex justify-evenly text-neutral-50">
+        <div>Best season: {getBestSeason(data).number}</div>
+        <div>Worst season: {getWorstSeason(data).number}</div>
       </div>
     </div>
   );
