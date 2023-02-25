@@ -5,7 +5,6 @@ import * as process from 'process';
 import { bufferCount, firstValueFrom, from, mergeMap } from 'rxjs';
 
 type EpisodeData = { episode_number: number; vote_average: number };
-type SeaonData = { season_number: number; episodes: EpisodeData[] };
 
 const getSeason = async (url: string) => {
   const res = await fetch(url);
@@ -59,7 +58,8 @@ export default async function handler(
     }))
   );
 
-  console.log(seasonEpisodeRatings);
-
-  res.json({ seasonAverageRatings, seasonEpisodeRatings });
+  res.json({
+    seasonAverageRatings,
+    seasonEpisodeRatings,
+  });
 }

@@ -2,7 +2,7 @@ export type SearchResult = {
   id: number;
   name: string;
   poster_path: string;
-  vote_average: string;
+  vote_average: number;
 };
 
 export type SeasonAverageData = { season: number; rating: number };

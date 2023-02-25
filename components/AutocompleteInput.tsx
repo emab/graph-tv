@@ -8,23 +8,24 @@ import React, {
 import { Spinner } from '@/components/Spinner';
 import cx from 'classnames';
 
-interface AutocompleteInput<T> {
+interface AutocompleteInput<T, C> {
   value: string;
   onValueChange: (value: string) => void;
-  handleSelect: (suggestion: Suggestion<T>) => void;
+  handleSelect: (suggestion: Suggestion<T, C>) => void;
   handleClose: VoidFunction;
   handleFocus?: VoidFunction;
   placeholder?: string;
-  suggestions?: Suggestion<T>[];
+  suggestions?: Suggestion<T, C>[];
   isLoading?: boolean;
 }
 
-interface Suggestion<T> {
+interface Suggestion<T, C> {
   label: string;
   value: T;
+  context: C;
 }
 
-export const AutocompleteInput = <T,>({
+export const AutocompleteInput = <T, C>({
   value,
   onValueChange,
   handleSelect,
@@ -33,12 +34,12 @@ export const AutocompleteInput = <T,>({
   suggestions = [],
   placeholder,
   isLoading = false,
-}: AutocompleteInput<T>) => {
+}: AutocompleteInput<T, C>) => {
   const ref = useRef<HTMLDivElement>(null);
   const [highlightedSelection, setHighlightedSelection] = useState(0);
 
   const selectItem = useCallback(
-    (suggestion: Suggestion<T>) => {
+    (suggestion: Suggestion<T, C>) => {
       handleSelect(suggestion);
       ref.current?.blur();
     },
@@ -127,7 +128,7 @@ export const AutocompleteInput = <T,>({
           <div
             key={String(suggestion.value)}
             className={cx(
-              'p-2 select-none cursor-pointer rounded hover:bg-neutral-200',
+              'p-2 select-none cursor-pointer rounded hover:bg-neutral-100',
               index === highlightedSelection && 'bg-neutral-200'
             )}
             onClick={() => {
