@@ -4,7 +4,7 @@ import { Search } from '@/components/Search';
 import { useQuery } from 'react-query';
 import GraphDisplay, { Data } from '@/components/GraphDisplay';
 import cx from 'classnames';
-import { FaSadCry, FaGithub } from 'react-icons/fa';
+import { FaGithub, FaSadCry } from 'react-icons/fa';
 import Head from 'next/head';
 
 const getSeasonData = async (id: number | undefined) => {
@@ -30,7 +30,7 @@ export default function Home() {
     };
   }, []);
 
-  const { data } = useQuery<Data>(
+  const { data, isLoading } = useQuery<Data>(
     ['getSeasonData', selected?.id],
     () => getSeasonData(selected?.id),
     { enabled: !!selected }
@@ -45,16 +45,40 @@ export default function Home() {
     <>
       <Head>
         <title>Graph TV</title>
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/manifest.json" />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/apple-touch-icon.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon-16x16.png"
+        />
+        <link rel="manifest" href="/site.webmanifest" />
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+        <meta name="msapplication-TileColor" content="#da532c" />
+        <meta name="theme-color" content="#ffffff" />
       </Head>
       <div className={cx(data ? 'bg-blue-900' : 'bg-neutral-50 h-full ')}>
-        <div className="fixed bottom-0 right-0 m-3 text-4xl">
+        <div
+          className={cx(
+            'fixed bottom-0 right-0 m-3 text-4xl rounded',
+            data && 'bg-neutral-300'
+          )}
+        >
           <a
             href="https://github.com/emab/graph-tv"
             target="_blank"
             rel="noreferrer"
+            title="Check out the source code on GitHub!"
           >
             <FaGithub />
           </a>
@@ -99,6 +123,12 @@ export default function Home() {
               </p>
             </div>
           )
+        ) : isLoading ? (
+          <div className="p-10 text-center">
+            <h3 className="text-2xl">
+              Hang on a sec! Grabbing the data for you...
+            </h3>
+          </div>
         ) : (
           <div className="p-10 text-center">
             <p className="text-xl">Hey and welcome to GraphTV!</p>
@@ -116,6 +146,18 @@ export default function Home() {
                 powered by TMDB
               </a>
               .
+            </p>
+            <p className="mt-3">
+              <a
+                href="https://blog.devbrown.com/"
+                className="underline text-blue-500 hover:text-blue-600"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Check out my site
+              </a>{' '}
+              for other projects I&apos;ve been working on, or use the link in
+              the bottom left to go to my GitHub page.
             </p>
           </div>
         )}
