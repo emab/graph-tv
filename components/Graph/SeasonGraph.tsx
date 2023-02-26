@@ -4,7 +4,7 @@ import * as d3 from 'd3';
 import { createLOBF } from './createLOBF';
 import { SeasonAverageData } from '@/types/searchResult';
 
-const margin = { top: 10, right: 30, bottom: 30, left: 60 };
+const margin = { top: 5, right: 10, bottom: 40, left: 40 };
 
 export const SeasonGraph = ({
   data,
@@ -68,7 +68,12 @@ export const SeasonGraph = ({
           div.transition().duration(200).style('opacity', 0.9);
           div
             .html('Season: ' + d.season + '<br/>' + 'Rating: ' + d.rating)
-            .style('left', event.clientX + 20 + 'px')
+            .style(
+              'left',
+              (screen.width - event.clientX > 200
+                ? event.clientX + 20
+                : event.clientX - 140) + 'px'
+            )
             .style('top', event.clientY - 28 + 'px')
             .style('position', 'fixed')
             .style('z-index', '10');
@@ -83,7 +88,7 @@ export const SeasonGraph = ({
         .append('text')
         .attr(
           'transform',
-          `translate(${width / 2}, ${height + margin.top + 20})`
+          `translate(${width / 2}, ${height + margin.top + 32})`
         )
         .style('text-anchor', 'middle')
         .attr('class', 'fill-white text-sm')
@@ -99,13 +104,29 @@ export const SeasonGraph = ({
         .style('text-anchor', 'middle')
         .attr('class', 'fill-white')
         .text('Rating');
+
+      const handleScroll = () => {
+        svg
+          .selectAll('circle')
+          .attr('r', 5)
+          .transition()
+          .duration(200)
+          .attr('fill', 'white');
+        div.transition().duration(200).style('opacity', 0);
+      };
+
+      document.addEventListener('scroll', handleScroll);
+
+      return () => {
+        document.removeEventListener('scroll', handleScroll);
+      };
     }
   }, [data, height, width]);
 
   return (
     <div className="bg-blue-600 p-5 shadow-2xl rounded">
       <svg width={w} height={h} ref={d3Container} />
-      <div className="py-3 flex justify-evenly text-neutral-50">
+      <div className="pt-4 font-bold flex flex-col md:flex-row items-center justify-evenly text-neutral-50">
         <div>Best season: {getBestSeason(data).number}</div>
         <div>Worst season: {getWorstSeason(data).number}</div>
       </div>

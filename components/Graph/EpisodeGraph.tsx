@@ -4,7 +4,7 @@ import { getBestEpisode, getWorstEpisode } from './dataTools';
 import { calculateMean, createLOBF } from './createLOBF';
 import { SeasonEpisodeData } from '@/types/searchResult';
 
-const margin = { top: 10, right: 30, bottom: 30, left: 60 };
+const margin = { top: 5, right: 10, bottom: 40, left: 40 };
 
 const EpisodeGraph = ({
   seasonNumber,
@@ -70,7 +70,12 @@ const EpisodeGraph = ({
           div.transition().duration(200).style('opacity', 0.9);
           div
             .html('Episode: ' + d.episode + '<br/>' + 'Rating: ' + d.rating)
-            .style('left', event.clientX + 20 + 'px')
+            .style(
+              'left',
+              (screen.width - event.clientX > 200
+                ? event.clientX + 20
+                : event.clientX - 140) + 'px'
+            )
             .style('top', event.clientY - 28 + 'px')
             .style('position', 'fixed')
             .style('z-index', '10');
@@ -85,7 +90,7 @@ const EpisodeGraph = ({
         .append('text')
         .attr(
           'transform',
-          `translate(${width / 2}, ${height + margin.top + 19})`
+          `translate(${width / 2}, ${height + margin.top + 32})`
         )
         .style('text-anchor', 'middle')
         .attr('class', 'fill-white text-sm')
@@ -101,22 +106,38 @@ const EpisodeGraph = ({
         .style('text-anchor', 'middle')
         .attr('class', 'fill-white text-sm')
         .text('Rating');
+
+      const handleScroll = () => {
+        svg
+          .selectAll('circle')
+          .attr('r', 5)
+          .transition()
+          .duration(200)
+          .attr('fill', 'white');
+        div.transition().duration(200).style('opacity', 0);
+      };
+
+      document.addEventListener('scroll', handleScroll);
+
+      return () => {
+        document.removeEventListener('scroll', handleScroll);
+      };
     }
   }, [data, height, width]);
 
   return (
     <div className="bg-blue-700 p-5 shadow-2xl rounded mb-10">
-      <h2 className="text-xl text-center text-white my-2">
+      <h2 className="text-2xl font-bold text-center text-white my-2">
         Season {seasonNumber}
       </h2>
       <svg width={w} height={h} ref={d3Container} />
-      <div className="py-3 flex justify-evenly text-neutral-50">
+      <div className="pt-4 font-bold flex flex-col md:flex-row items-center justify-evenly text-neutral-50">
         <div>Best episode: {getBestEpisode(data).number}</div>
+        <div>Worst episode: {getWorstEpisode(data).number}</div>
         <div>
           Average rating:{' '}
           {calculateMean(data.map(({ rating }) => rating)).toFixed(2)}
         </div>
-        <div>Worst episode: {getWorstEpisode(data).number}</div>
       </div>
     </div>
   );
