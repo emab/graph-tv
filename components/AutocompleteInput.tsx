@@ -1,12 +1,7 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Spinner } from '@/components/Spinner';
 import cx from 'classnames';
+import { MdClear } from 'react-icons/md';
 
 interface AutocompleteInput<T, C> {
   value: string;
@@ -14,6 +9,7 @@ interface AutocompleteInput<T, C> {
   handleSelect: (suggestion: Suggestion<T, C>) => void;
   handleClose: VoidFunction;
   handleFocus?: VoidFunction;
+  handleClear: VoidFunction;
   placeholder?: string;
   suggestions?: Suggestion<T, C>[];
   isLoading?: boolean;
@@ -31,6 +27,7 @@ export const AutocompleteInput = <T, C>({
   handleSelect,
   handleClose,
   handleFocus,
+  handleClear,
   suggestions = [],
   placeholder,
   isLoading = false,
@@ -110,7 +107,7 @@ export const AutocompleteInput = <T, C>({
   }, [highlightedSelection]);
 
   return (
-    <div className="relative w-96" ref={ref}>
+    <div className="relative w-full px-2 md:px-0 max-w-lg" ref={ref}>
       <div className="relative w-full">
         <input
           className="text-black p-2 rounded min-w-full"
@@ -123,7 +120,7 @@ export const AutocompleteInput = <T, C>({
           <Spinner className="absolute text-black text-xl right-2 top-2.5" />
         )}
       </div>
-      <div className="absolute bg-white text-black mt-0.5 rounded w-full shadow-xl">
+      <div className="absolute bg-white text-black mt-0.5 rounded w-4/6 md:w-full shadow-xl">
         {suggestions?.map((suggestion, index) => (
           <div
             key={String(suggestion.value)}
@@ -140,6 +137,17 @@ export const AutocompleteInput = <T, C>({
           </div>
         ))}
       </div>
+      <button
+        className={cx(
+          'absolute right-2 w-10 top-0 flex items-center justify-center bg-neutral-300 hover:bg-neutral-200 h-full rounded-r',
+          !value && 'invisible'
+        )}
+        onClick={() => {
+          handleClear();
+        }}
+      >
+        <MdClear />
+      </button>
     </div>
   );
 };
