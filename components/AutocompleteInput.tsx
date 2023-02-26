@@ -107,17 +107,17 @@ export const AutocompleteInput = <T, C>({
   }, [highlightedSelection]);
 
   return (
-    <div className="relative w-full px-2 md:px-0 max-w-lg" ref={ref}>
+    <div className="relative w-full px-2 max-w-lg" ref={ref}>
       <div className="relative w-full">
         <input
-          className="text-black p-2 rounded min-w-full"
+          className="text-black p-2 rounded min-w-full pr-20"
           value={value}
           onChange={({ currentTarget: { value } }) => onValueChange(value)}
           onFocus={() => handleFocus?.()}
           placeholder={placeholder}
         />
         {isLoading && (
-          <Spinner className="absolute text-black text-xl right-2 top-2.5" />
+          <Spinner className="absolute text-black text-xl right-12 top-2.5" />
         )}
       </div>
       <div className="absolute bg-white text-black mt-0.5 rounded w-4/6 md:w-full shadow-xl">
