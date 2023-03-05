@@ -66,6 +66,10 @@ export default function Home() {
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
         <meta name="msapplication-TileColor" content="#da532c" />
         <meta name="theme-color" content="#ffffff" />
+        <meta
+          name="description"
+          content="View a ratings graph of your favourite TV shows"
+        />
       </Head>
       <div className={cx(data ? 'bg-blue-900' : 'bg-neutral-50 h-full ')}>
         <div
@@ -162,6 +166,7 @@ export default function Home() {
           </div>
         )}
       </div>
+      ;
     </>
   );
 }
