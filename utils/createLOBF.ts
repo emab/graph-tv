@@ -6,8 +6,8 @@ export const calculateMean = (values: unknown[]) =>
     .reduce((acc, next) => acc + Number(next), 0) / values.length;
 
 const calculateLOBF = (
-  values: { x: unknown; y: unknown }[]
-): [{ x0: string; y0: number }, { x1: string; y1: number }] => {
+  values: { x: number; y: number }[]
+): [{ x0: number; y0: number }, { x1: number; y1: number }] => {
   const { XValues, YValues } = values.reduce<{
     XValues: number[];
     YValues: number[];
@@ -47,23 +47,23 @@ const calculateLOBF = (
   const y1 = gradient * values.length + YIntercept;
 
   return [
-    { y0, x0: '1' },
-    { y1, x1: String(values.length) },
+    { y0, x0: 1 },
+    { y1, x1: values.length },
   ];
 };
 
 export const createLOBF = (
-  values: { x: unknown; y: unknown }[],
+  values: { x: number; y: number }[],
   svg: d3.Selection<SVGGElement, unknown, HTMLElement, string>,
-  x: (x: string) => number | undefined,
+  x: (x: number) => number | undefined,
   y: (y: number) => number
 ) => {
   const [{ x0, y0 }, { x1, y1 }] = calculateLOBF(values);
 
   svg
     .append('line')
-    .style('stroke', 'lightblue')
-    .style('stroke-width', 1)
+    .attr('class', 'lobf')
+    // .style('stroke-width', 1)
     .style('z-index', 0)
     .attr('x1', String(x(x0)))
     .attr('y1', y(y0))

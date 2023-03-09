@@ -55,6 +55,8 @@ export default async function handler(
     rating: getSeasonAverage(season.episodes),
   }));
 
+  console.log(json);
+
   const seasonEpisodeRatings = sortedResult.map((season) =>
     season.episodes.map((episode) => ({
       episode: episode.episode_number,
@@ -64,6 +66,8 @@ export default async function handler(
   );
 
   res.json({
+    name: json.name,
+    averageRating: json.vote_average,
     seasonAverageRatings,
     seasonEpisodeRatings,
   });

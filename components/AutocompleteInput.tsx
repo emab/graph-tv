@@ -139,7 +139,7 @@ export const AutocompleteInput = <T, C>({
       </div>
       <button
         className={cx(
-          'absolute right-2 w-10 top-0 flex items-center justify-center bg-neutral-300 hover:bg-neutral-200 h-full rounded-r',
+          'absolute right-2 w-10 top-0 flex items-center justify-center bg-neutral-300 hover:bg-neutral-200 h-full rounded-r text-neutral-500',
           !value && 'invisible'
         )}
         onClick={() => {

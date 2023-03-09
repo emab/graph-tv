@@ -2,14 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+.lobf {
+    @apply stroke-blue-400 stroke-2;
+}
+
 @layer base {
     html, body, #__next {
-        @apply h-full min-h-screen;
+        @apply h-full min-h-screen text-white;
+    }
+
+    .tick line {
+        opacity: 0.2;
     }
 }
 
 @layer components {
     .tooltip {
-        @apply absolute opacity-0 pointer-events-none bg-neutral-700 p-3 rounded text-white;
+        @apply absolute pointer-events-none bg-neutral-900 p-3 rounded text-white;
     }
 }

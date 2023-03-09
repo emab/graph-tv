@@ -5,9 +5,7 @@ import { SearchResult } from '@/types/searchResult';
 import { AutocompleteInput } from '@/components/AutocompleteInput';
 
 interface Search {
-  setSelected: Dispatch<
-    SetStateAction<{ name: string; id: number; rating: number } | undefined>
-  >;
+  setSelectedShowId: Dispatch<SetStateAction<number | undefined>>;
 }
 
 const search = async (query: string | null) => {
@@ -16,7 +14,7 @@ const search = async (query: string | null) => {
   return (await response.json()) as SearchResult[];
 };
 
-export const Search = ({ setSelected }: Search) => {
+export const Search = ({ setSelectedShowId }: Search) => {
   const [searchValue, setSearchValue] = React.useState<string>('');
   const debouncedSearchValue = useDebounce(searchValue, 500);
 
@@ -44,11 +42,7 @@ export const Search = ({ setSelected }: Search) => {
       handleSelect={(suggestion) => {
         setDisableAutocomplete(true);
         setSearchValue(suggestion.label);
-        setSelected({
-          name: suggestion.label,
-          id: suggestion.value,
-          rating: suggestion.context.rating,
-        });
+        setSelectedShowId(suggestion.value);
       }}
       suggestions={
         disableAutocomplete || !searchValue
