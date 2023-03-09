@@ -4,7 +4,11 @@ import { BASE_URL } from '@/api';
 import * as process from 'process';
 import { bufferCount, firstValueFrom, from, mergeMap } from 'rxjs';
 
-type EpisodeData = { episode_number: number; vote_average: number };
+type EpisodeData = {
+  name: string;
+  episode_number: number;
+  vote_average: number;
+};
 
 const getSeason = async (url: string) => {
   const res = await fetch(url);
@@ -39,7 +43,7 @@ export default async function handler(
 
   const result = (await firstValueFrom(source)) as {
     season_number: number;
-    episodes: { episode_number: number; vote_average: number }[];
+    episodes: EpisodeData[];
   }[];
 
   const sortedResult = result
@@ -55,6 +59,7 @@ export default async function handler(
     season.episodes.map((episode) => ({
       episode: episode.episode_number,
       rating: episode.vote_average,
+      name: episode.name,
     }))
   );
 

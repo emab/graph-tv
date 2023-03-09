@@ -69,7 +69,15 @@ const EpisodeGraph = ({
           d3.select(this).attr('r', 10).attr('fill', '#4778de');
           div.transition().duration(200).style('opacity', 0.9);
           div
-            .html('Episode: ' + d.episode + '<br/>' + 'Rating: ' + d.rating)
+            .html(
+              d.name +
+                '<br />' +
+                'Episode: ' +
+                d.episode +
+                '<br/>' +
+                'Rating: ' +
+                d.rating
+            )
             .style(
               'left',
               (screen.width - event.clientX > 200
