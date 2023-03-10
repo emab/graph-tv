@@ -4,7 +4,7 @@ import { Search } from '@/components/Search';
 import { useQuery } from 'react-query';
 import GraphDisplay, { Data } from '@/components/GraphDisplay';
 import Head from 'next/head';
-import { GithubLogo } from '@/components/GithubLogo';
+import { FloatingLinks } from '@/components/FloatingLinks';
 import { Welcome } from '@/components/Welcome';
 import { Loading } from '@/components/Loading';
 import { NoData } from '@/NoData';
@@ -88,7 +88,7 @@ export default function Home() {
         />
       </Head>
       <div className="bg-gray-700 min-h-full">
-        <GithubLogo />
+        <FloatingLinks />
         <div
           className={cx(
             'relative bg-gray-800 py-5 flex flex-col cursor-pointer items-center select-none hover:text-blue-100',
