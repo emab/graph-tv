@@ -59,6 +59,7 @@ const GraphDisplay = ({ data }: { data: Data }) => {
             extra: undefined,
           })) ?? []
         }
+        xLabel="Season"
         getTooltipHtml={(d) => `Season: ${d.x + 1}</br>Rating: ${d.y}`}
         width={graphWidth}
         height={400}
@@ -86,6 +87,7 @@ const GraphDisplay = ({ data }: { data: Data }) => {
                     name: value.name,
                   },
                 }))}
+                xLabel="Episode"
                 getTooltipHtml={(d) =>
                   `<span class="font-bold">${d.extra.name}</span></br><span class="text-neutral-200">Episode: ${d.x}</span></br><span class="text-neutral-200">Rating: ${d.y}</span>`
                 }

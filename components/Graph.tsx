@@ -9,6 +9,7 @@ type Data<T> = { x: number; y: number; extra: T };
 type GraphProps<T> = {
   title: string;
   data: Data<T>[];
+  xLabel: string;
   height: number;
   width: number;
   getTooltipHtml: (d: Data<T>) => string;
@@ -18,6 +19,7 @@ type GraphProps<T> = {
 export const Graph = <T,>({
   title,
   data,
+  xLabel,
   height,
   width,
   getTooltipHtml,
@@ -116,7 +118,7 @@ export const Graph = <T,>({
         )
         .style('text-anchor', 'middle')
         .attr('class', 'fill-white text-sm')
-        .text('Episode');
+        .text(xLabel);
 
       // Y-axis label
       svg
