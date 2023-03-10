@@ -85,18 +85,13 @@ export const Graph = <T,>({
         .attr('fill', 'white')
         .on('mouseover', function (event, d) {
           d3.select(this).attr('r', 10).attr('fill', '#4778de');
-          tooltip.transition().duration(200).style('opacity', 0.9);
           tooltip
-            .html(
-              getTooltipHtml(d)
-              // d.name +
-              //   '<br />' +
-              //   'Episode: ' +
-              //   d.episode +
-              //   '<br/>' +
-              //   'Rating: ' +
-              //   d.rating
-            )
+            .transition()
+            .duration(200)
+            .style('opacity', 0.9)
+            .style('display', 'block');
+          tooltip
+            .html(getTooltipHtml(d))
             .style(
               'left',
               (screen.width - event.clientX > 200
@@ -134,21 +129,20 @@ export const Graph = <T,>({
         .attr('class', 'fill-white text-sm')
         .text('Rating');
 
-      // const handleScroll = () => {
-      //   svg
-      //     .selectAll('circle')
-      //     .attr('r', 5)
-      //     .transition()
-      //     .duration(200)
-      //     .attr('fill', 'white');
-      //   .transition().duration(200).style('opacity', 0);
-      // };
+      const handleScroll = () => {
+        svg
+          .selectAll('circle')
+          .attr('r', 5)
+          .transition()
+          .duration(200)
+          .attr('fill', 'white');
+      };
 
-      // document.addEventListener('scroll', handleScroll);
-      //
-      // return () => {
-      //   document.removeEventListener('scroll', handleScroll);
-      // };
+      document.addEventListener('scroll', handleScroll);
+
+      return () => {
+        document.removeEventListener('scroll', handleScroll);
+      };
     }
   }, [data, getTooltipHtml, graphHeight, graphWidth]);
 

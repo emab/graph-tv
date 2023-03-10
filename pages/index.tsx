@@ -3,16 +3,15 @@ import * as d3 from 'd3';
 import { Search } from '@/components/Search';
 import { useQuery } from 'react-query';
 import GraphDisplay, { Data } from '@/components/GraphDisplay';
-import cx from 'classnames';
-import { FaGithub, FaSadCry } from 'react-icons/fa';
 import Head from 'next/head';
 import { GithubLogo } from '@/components/GithubLogo';
-import { SearchCredits } from '@/components/SearchCredits';
 import { Welcome } from '@/components/Welcome';
 import { Loading } from '@/components/Loading';
 import { NoData } from '@/NoData';
 import { SelectionInfo } from '@/components/SelectionInfo';
 import { useRouter } from 'next/router';
+import { FaChevronDown } from 'react-icons/fa';
+import cx from 'classnames';
 
 const getSeasonData = async (id: number | undefined) => {
   if (typeof id !== 'number') return Promise.resolve(null);
@@ -23,6 +22,7 @@ const getSeasonData = async (id: number | undefined) => {
 export default function Home() {
   const { query, push } = useRouter();
   const [selectedShowId, setSelectedShowId] = useState<number>();
+  const [showSearch, setShowSearch] = useState(true);
 
   useEffect(() => {
     if (query?.showId) {
@@ -51,7 +51,7 @@ export default function Home() {
   const { data, isLoading } = useQuery<Data>(
     ['getSeasonData', selectedShowId],
     () => getSeasonData(selectedShowId),
-    { enabled: !!selectedShowId }
+    { enabled: !!selectedShowId, onSuccess: () => setShowSearch(false) }
   );
 
   const episodeCount =
@@ -89,9 +89,31 @@ export default function Home() {
       </Head>
       <div className="bg-gray-700 min-h-full">
         <GithubLogo />
-        <div className="bg-gray-800 py-5 flex flex-col items-center">
-          <h1 className="text-5xl text-white font-bold pb-5">Graph TV</h1>
-          <Search setSelectedShowId={setSelectedShowId} />
+        <div
+          className={cx(
+            'relative bg-gray-800 py-5 flex flex-col cursor-pointer items-center select-none hover:text-blue-100',
+            !showSearch && 'hover:opacity-100 hover:text-xl'
+          )}
+        >
+          <h1
+            className={cx(
+              'text-5xl font-bold opacity-100',
+              showSearch ? 'pb-5' : 'pb-2'
+            )}
+            onClick={() => setShowSearch(!showSearch)}
+          >
+            Graph TV
+          </h1>
+
+          <FaChevronDown
+            className={cx(
+              'opacity-60 absolute hover:opacity-100 text-blue-100 hover:text-xl cursor-pointer transition-all',
+              !showSearch ? 'bottom-1' : 'bottom-0 rotate-180'
+            )}
+            onClick={() => setShowSearch(!showSearch)}
+          />
+
+          {showSearch && <Search setSelectedShowId={setSelectedShowId} />}
         </div>
         {data && selectedShowId ? (
           data.seasonEpisodeRatings.length ? (
@@ -113,7 +135,6 @@ export default function Home() {
           <Welcome />
         )}
       </div>
-      ;
     </>
   );
 }

@@ -110,7 +110,7 @@ export const AutocompleteInput = <T, C>({
     <div className="relative w-full px-2 max-w-lg" ref={ref}>
       <div className="relative w-full">
         <input
-          className="text-black p-2 rounded min-w-full pr-20"
+          className="text-black text-base p-2 rounded min-w-full pr-20"
           value={value}
           onChange={({ currentTarget: { value } }) => onValueChange(value)}
           onFocus={() => handleFocus?.()}

@@ -12,9 +12,7 @@ export const SelectionInfo = ({
   selectedName,
 }: SelectionInfoProps) => (
   <div className="bg-gray-900 p-10 text-xl text-center">
-    <p>
-      You&apos;ve selected <span className="font-bold">{selectedName}</span>.
-    </p>
+    <h2 className="font-bold text-4xl mb-2">{selectedName}</h2>
     <p>
       It has <span className="font-bold">{episodeCount} episodes</span> over{' '}
       <span className="font-bold">{seasonCount}</span> seasons with an overall
