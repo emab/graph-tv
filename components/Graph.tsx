@@ -1,6 +1,13 @@
-import React, { ReactNode, useEffect, useMemo, useRef } from 'react';
+import React, {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import * as d3 from 'd3';
 import { createLOBF } from '@/utils/createLOBF';
+import { getBest, getWorst, ratingNormalizer } from '@/utils/dataTools';
 
 const margin = { top: 5, right: 10, bottom: 20, left: 40 };
 
@@ -31,6 +38,27 @@ export const Graph = <T,>({
     [height]
   );
   const graphWidth = useMemo(() => width - margin.left - margin.right, [width]);
+
+  const worstRating = useMemo(
+    () =>
+      getWorst<Data<T> & { rating: number }>('x')(
+        data.map((data) => ({ ...data, rating: data.y }))
+      ).rating,
+    [data]
+  );
+
+  const bestRating = useMemo(
+    () =>
+      getBest<Data<T> & { rating: number }>('x')(
+        data.map((data) => ({ ...data, rating: data.y }))
+      ).rating,
+    [data]
+  );
+
+  const normalizeRating = useCallback(
+    (rating: number) => ratingNormalizer(worstRating, bestRating)(rating) / 1.2,
+    [bestRating, worstRating]
+  );
 
   useEffect(() => {
     if (d3Container.current && data) {
@@ -84,9 +112,9 @@ export const Graph = <T,>({
         .attr('r', 5)
         .attr('cx', (d) => x(d.x) ?? '')
         .attr('cy', (d) => y(d.y))
-        .attr('fill', 'white')
+        .attr('fill', (d) => d3.interpolateRdBu(normalizeRating(d.y)))
         .on('mouseover', function (event, d) {
-          d3.select(this).attr('r', 10).attr('fill', '#4778de');
+          d3.select(this).attr('r', 10);
           tooltip
             .transition()
             .duration(200)
@@ -105,20 +133,9 @@ export const Graph = <T,>({
             .style('z-index', '10');
         })
         .on('mouseout', function () {
-          d3.select(this).attr('r', 5).attr('fill', 'white');
+          d3.select(this).attr('r', 5);
           tooltip.transition().duration(500).style('opacity', 0);
         });
-
-      // // X-axis label
-      // svg
-      //   .append('text')
-      //   .attr(
-      //     'transform',
-      //     `translate(${graphWidth / 2}, ${graphHeight + margin.top + 32})`
-      //   )
-      //   .style('text-anchor', 'middle')
-      //   .attr('class', 'fill-white text-sm')
-      //   .text(xLabel);
 
       // Y-axis label
       svg
@@ -133,12 +150,7 @@ export const Graph = <T,>({
         .text('Rating');
 
       const handleScroll = () => {
-        svg
-          .selectAll('circle')
-          .attr('r', 5)
-          .transition()
-          .duration(200)
-          .attr('fill', 'white');
+        svg.selectAll('circle').attr('r', 5).transition().duration(200);
       };
 
       document.addEventListener('scroll', handleScroll);
@@ -147,10 +159,10 @@ export const Graph = <T,>({
         document.removeEventListener('scroll', handleScroll);
       };
     }
-  }, [data, getTooltipHtml, graphHeight, graphWidth, xLabel]);
+  }, [data, getTooltipHtml, graphHeight, graphWidth, normalizeRating, xLabel]);
 
   return (
-    <div className="bg-neutral-800 p-5 pb-0 px-0 shadow-2xl rounded mb-10">
+    <div className="bg-neutral-900 p-5 pb-0 px-0 shadow-2xl rounded mb-10">
       <h2 className="text-2xl font-bold text-center text-white my-2">
         {title}
       </h2>

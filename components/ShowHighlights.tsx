@@ -29,8 +29,8 @@ export const ShowHighlights = ({ seasonData }: ShowHighlightsProps) => {
         <h2 className="text-2xl inline-flex">
           Worst <FaThumbsDown className="relative ml-2 top-2 text-red-600" />
         </h2>
-        <p>Season: {bestSeason.season}</p>
-        <p>Rating: {bestSeason.rating}</p>
+        <p>Season: {worstSeason.season}</p>
+        <p>Rating: {worstSeason.rating}</p>
       </div>
     </div>
   );
