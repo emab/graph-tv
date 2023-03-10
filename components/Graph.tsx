@@ -9,7 +9,7 @@ import * as d3 from 'd3';
 import { createLOBF } from '@/utils/createLOBF';
 import { getBest, getWorst, ratingNormalizer } from '@/utils/dataTools';
 
-const margin = { top: 5, right: 10, bottom: 20, left: 40 };
+const margin = { top: 5, right: 50, bottom: 20, left: 40 };
 
 type Data<T> = { x: number; y: number; extra: T };
 
@@ -124,9 +124,9 @@ export const Graph = <T,>({
             .html(getTooltipHtml(d))
             .style(
               'left',
-              (screen.width - event.clientX > 200
+              (window.innerWidth - event.clientX > 200
                 ? event.clientX + 20
-                : event.clientX - 140) + 'px'
+                : event.clientX - 130) + 'px'
             )
             .style('top', event.clientY - 28 + 'px')
             .style('position', 'fixed')

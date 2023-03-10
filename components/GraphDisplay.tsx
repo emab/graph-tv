@@ -1,18 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { SeasonAverageData, SeasonEpisodeData } from '@/types/searchResult';
 import { Graph } from './Graph';
-import {
-  getBestEpisode,
-  getBestSeason,
-  getWorstEpisode,
-  getWorstSeason,
-} from '@/utils/dataTools';
-import { calculateMean } from '@/utils/createLOBF';
 import { SeasonHighlights } from '@/components/SeasonHighlights';
 import { ShowHighlights } from './ShowHighlights';
 
 const getGraphWidth = (container: HTMLDivElement): number =>
-  container?.clientWidth - 50 ?? 0;
+  container?.clientWidth - 10 ?? 0;
 
 export type Data = {
   name: string;
@@ -62,7 +55,7 @@ const GraphDisplay = ({ data }: { data: Data }) => {
           })) ?? []
         }
         xLabel="Season"
-        getTooltipHtml={(d) => `Season: ${d.x + 1}</br>Rating: ${d.y}`}
+        getTooltipHtml={(d) => `Season: ${d.x}</br>Rating: ${d.y}`}
         width={graphWidth}
         height={400}
       >
