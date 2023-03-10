@@ -46,7 +46,7 @@ const GraphDisplay = ({ data }: { data: Data }) => {
   }, []);
 
   return (
-    <div className="m-5 max-w-6xl mx-auto" ref={ref}>
+    <div className="m-5 mx-2 md:mx-14 lg:mx-28" ref={ref}>
       <h2 className="text-4xl text-center text-white mb-4">
         Average Season Ratings
       </h2>

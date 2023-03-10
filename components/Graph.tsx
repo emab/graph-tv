@@ -147,7 +147,7 @@ export const Graph = <T,>({
   }, [data, getTooltipHtml, graphHeight, graphWidth]);
 
   return (
-    <div className="bg-neutral-700 p-5 shadow-2xl rounded mb-10">
+    <div className="bg-neutral-800 p-5 shadow-2xl rounded mb-10">
       <h2 className="text-2xl font-bold text-center text-white my-2">
         {title}
       </h2>
