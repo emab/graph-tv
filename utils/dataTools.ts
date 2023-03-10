@@ -3,7 +3,7 @@ import { EpisodeData, SeasonAverageData } from '@/types/searchResult';
 const getBest =
   <T extends { rating: number }>(type: keyof T) =>
   (data: T[]) => {
-    let number;
+    let number: T[keyof T];
     let rating = -1;
     data.forEach((val) => {
       if (Number(val.rating) > rating) {
@@ -11,13 +11,13 @@ const getBest =
         number = val[type]!;
       }
     });
-    return { number, rating };
+    return data.find((d) => d[type] === number)!;
   };
 
 const getWorst =
   <T extends { rating: number }>(type: keyof T) =>
   (data: T[]) => {
-    let number;
+    let number: T[keyof T];
     let rating = 11;
     data.forEach((val) => {
       if (Number(val.rating) < rating) {
@@ -25,7 +25,7 @@ const getWorst =
         number = val[type];
       }
     });
-    return { number, rating };
+    return data.find((d) => d[type] === number)!;
   };
 
 export const getBestEpisode = getBest<EpisodeData>('episode');

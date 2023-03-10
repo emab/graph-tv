@@ -2,7 +2,7 @@ import React, { ReactNode, useEffect, useMemo, useRef } from 'react';
 import * as d3 from 'd3';
 import { createLOBF } from '@/utils/createLOBF';
 
-const margin = { top: 5, right: 10, bottom: 40, left: 40 };
+const margin = { top: 5, right: 10, bottom: 20, left: 40 };
 
 type Data<T> = { x: number; y: number; extra: T };
 
@@ -109,16 +109,16 @@ export const Graph = <T,>({
           tooltip.transition().duration(500).style('opacity', 0);
         });
 
-      // X-axis label
-      svg
-        .append('text')
-        .attr(
-          'transform',
-          `translate(${graphWidth / 2}, ${graphHeight + margin.top + 32})`
-        )
-        .style('text-anchor', 'middle')
-        .attr('class', 'fill-white text-sm')
-        .text(xLabel);
+      // // X-axis label
+      // svg
+      //   .append('text')
+      //   .attr(
+      //     'transform',
+      //     `translate(${graphWidth / 2}, ${graphHeight + margin.top + 32})`
+      //   )
+      //   .style('text-anchor', 'middle')
+      //   .attr('class', 'fill-white text-sm')
+      //   .text(xLabel);
 
       // Y-axis label
       svg
@@ -129,6 +129,7 @@ export const Graph = <T,>({
         .attr('dy', '1em')
         .style('text-anchor', 'middle')
         .attr('class', 'fill-white text-sm')
+        .style('opacity', '60%')
         .text('Rating');
 
       const handleScroll = () => {
@@ -146,14 +147,15 @@ export const Graph = <T,>({
         document.removeEventListener('scroll', handleScroll);
       };
     }
-  }, [data, getTooltipHtml, graphHeight, graphWidth]);
+  }, [data, getTooltipHtml, graphHeight, graphWidth, xLabel]);
 
   return (
-    <div className="bg-neutral-800 p-5 shadow-2xl rounded mb-10">
+    <div className="bg-neutral-800 p-5 pb-0 px-0 shadow-2xl rounded mb-10">
       <h2 className="text-2xl font-bold text-center text-white my-2">
         {title}
       </h2>
-      <svg width={width} height={height} ref={d3Container} />
+      <svg width={width} height={height} ref={d3Container} className="px-5" />
+      <div className="text-center mb-2 opacity-60">{xLabel}</div>
       {children}
     </div>
   );

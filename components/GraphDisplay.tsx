@@ -8,6 +8,8 @@ import {
   getWorstSeason,
 } from '@/utils/dataTools';
 import { calculateMean } from '@/utils/createLOBF';
+import { SeasonHighlights } from '@/components/SeasonHighlights';
+import { ShowHighlights } from './ShowHighlights';
 
 const getGraphWidth = (container: HTMLDivElement): number =>
   container?.clientWidth - 50 ?? 0;
@@ -64,14 +66,7 @@ const GraphDisplay = ({ data }: { data: Data }) => {
         width={graphWidth}
         height={400}
       >
-        <div className="pt-4 font-bold flex flex-col md:flex-row items-center justify-evenly text-neutral-50">
-          <div>
-            Best season: {getBestSeason(data.seasonAverageRatings).number}
-          </div>
-          <div>
-            Worst season: {getWorstSeason(data.seasonAverageRatings).number}
-          </div>
-        </div>
+        <ShowHighlights seasonData={data.seasonAverageRatings} />
       </Graph>
       <div className="mt-10">
         <h2 className="text-4xl text-center text-white mb-4">Season Ratings</h2>
@@ -94,20 +89,7 @@ const GraphDisplay = ({ data }: { data: Data }) => {
                 width={graphWidth}
                 height={400}
               >
-                <div className="pt-4 font-bold flex flex-col md:flex-row items-center justify-evenly text-neutral-50">
-                  <div>
-                    Best episode: {getBestEpisode(seasonEpisodes).number}
-                  </div>
-                  <div>
-                    Worst episode: {getWorstEpisode(seasonEpisodes).number}
-                  </div>
-                  <div>
-                    Average rating:{' '}
-                    {calculateMean(
-                      seasonEpisodes.map(({ rating }) => rating)
-                    ).toFixed(2)}
-                  </div>
-                </div>
+                <SeasonHighlights seasonEpisodes={seasonEpisodes} />
               </Graph>
             </div>
           );
