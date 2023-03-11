@@ -3,6 +3,8 @@ import { SeasonAverageData, SeasonEpisodeData } from '@/types/searchResult';
 import { Graph } from './Graph';
 import { SeasonHighlights } from '@/components/SeasonHighlights';
 import { ShowHighlights } from './ShowHighlights';
+import { AllEpisodeGraph } from './AllEpisodeGraph';
+import { AllEpisodeSummary } from '@/components/AllEpisodeSummary';
 
 const getGraphWidth = (container: HTMLDivElement): number =>
   container?.clientWidth - 10 ?? 0;
@@ -40,10 +42,30 @@ const GraphDisplay = ({ data }: { data: Data }) => {
     }
   }, []);
 
-  console.log(data);
-
   return (
     <div className="m-5 mx-2 md:mx-14 lg:mx-28" ref={ref}>
+      <AllEpisodeGraph
+        title=""
+        getTooltipHtml={(d) =>
+          `<span class='font-bold'>Season ${d.extra.season}</span></br><span class='font-bold'>Episode ${d.extra.actualEpisode}</span></br><span class='font-medium'>${d.extra.name}</span></br><span class='text-neutral-200'>Episode: ${d.x}</span></br><span class='text-neutral-200'>Rating: ${d.y}</span>`
+        }
+        width={graphWidth}
+        height={400}
+        xLabel="Episode"
+        data={data.seasonEpisodeRatings.map((season, index) =>
+          season.map((episode) => ({
+            x: episode.overallEpisode,
+            y: episode.rating,
+            extra: {
+              name: episode.name,
+              season: index + 1,
+              actualEpisode: episode.episode,
+            },
+          }))
+        )}
+      >
+        <AllEpisodeSummary data={data.seasonEpisodeRatings} />
+      </AllEpisodeGraph>
       <h2 className="text-4xl text-center text-white mb-4">
         Average Season Ratings
       </h2>
@@ -79,7 +101,7 @@ const GraphDisplay = ({ data }: { data: Data }) => {
                 }))}
                 xLabel="Episode"
                 getTooltipHtml={(d) =>
-                  `<span class="font-bold">${d.extra.name}</span></br><span class="text-neutral-200">Episode: ${d.x}</span></br><span class="text-neutral-200">Rating: ${d.y}</span>`
+                  `<span class='font-bold'>${d.extra.name}</span></br><span class='text-neutral-200'>Episode: ${d.x}</span></br><span class='text-neutral-200'>Rating: ${d.y}</span>`
                 }
                 width={graphWidth}
                 height={400}

@@ -12,6 +12,7 @@ export type EpisodeData = {
   episode: number;
   rating: number;
   overallEpisode: number;
+  season: number;
 };
 
 export type SeasonEpisodeData = EpisodeData[];

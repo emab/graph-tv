@@ -57,6 +57,7 @@ export const createLOBF = (
   svg: d3.Selection<SVGGElement, unknown, HTMLElement, string>,
   x: (x: number) => number | undefined,
   y: (y: number) => number,
+  color: string,
   offset?: number
 ) => {
   const [{ x0, y0 }, { x1, y1 }] = calculateLOBF(values);
@@ -64,6 +65,7 @@ export const createLOBF = (
   svg
     .append('line')
     .attr('class', 'lobf')
+    .style('stroke', color)
     .style('z-index', 0)
     .attr('x1', String(x(x0 + (offset ?? 0))))
     .attr('y1', y(y0))

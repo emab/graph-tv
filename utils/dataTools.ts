@@ -33,6 +33,5 @@ export const getWorstEpisode = getWorst<EpisodeData>('episode');
 export const getBestSeason = getBest<SeasonAverageData>('season');
 export const getWorstSeason = getWorst<SeasonAverageData>('season');
 
-export const ratingNormalizer =
-  (minRating: number, maxRating: number) => (rating: number) =>
-    (rating - minRating) / (maxRating - minRating);
+export const normalizer = (min: number, max: number) => (value: number) =>
+  (value - min) / (max - min);

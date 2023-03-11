@@ -83,6 +83,7 @@ export default async function handler(
       episode: episode.episode_number,
       rating: episode.vote_average,
       name: episode.name,
+      season: season.season_number,
     }))
   );
 

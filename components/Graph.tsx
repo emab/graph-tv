@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import * as d3 from 'd3';
 import { createLOBF } from '@/utils/createLOBF';
-import { getBest, getWorst, ratingNormalizer } from '@/utils/dataTools';
+import { getBest, getWorst, normalizer } from '@/utils/dataTools';
 
 const margin = { top: 5, right: 50, bottom: 20, left: 40 };
 
@@ -51,12 +51,12 @@ export const Graph = <T,>({
     () =>
       getBest<Data<T> & { rating: number }>('x')(
         data.map((data) => ({ ...data, rating: data.y }))
-      ).rating,
+      ).y,
     [data]
   );
 
   const normalizeRating = useCallback(
-    (rating: number) => ratingNormalizer(worstRating, bestRating)(rating) / 1.2,
+    (rating: number) => normalizer(worstRating, bestRating)(rating) / 1.2,
     [bestRating, worstRating]
   );
 
@@ -92,7 +92,7 @@ export const Graph = <T,>({
 
       const y = d3.scaleLinear().domain([0, 10]).range([graphHeight, 0]);
 
-      createLOBF(data, svg, x, y);
+      createLOBF(data, svg, x, y, 'white');
 
       svg
         .append('g')

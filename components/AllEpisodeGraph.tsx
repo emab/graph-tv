@@ -6,24 +6,28 @@ import React, {
   useRef,
 } from 'react';
 import * as d3 from 'd3';
-import { getBest, getWorst, ratingNormalizer } from '@/utils/dataTools';
+import { normalizer } from '@/utils/dataTools';
 import { createLOBF } from '@/utils/createLOBF';
 
 const margin = { top: 5, right: 50, bottom: 20, left: 40 };
 
-type Data<T> = { x: number; y: number; extra: T };
+type Data = {
+  x: number;
+  y: number;
+  extra: { name: string; season: number; actualEpisode: number };
+};
 
-type MultiGraphProps<T> = {
+type AllEpisodeGraphProps = {
   title: string;
-  data: Data<T>[][];
+  data: Data[][];
   xLabel: string;
   height: number;
   width: number;
-  getTooltipHtml: (d: Data<T>) => string;
+  getTooltipHtml: (d: Data) => string;
   children?: ReactNode;
 };
 
-export const MultiGraph = <T,>({
+export const AllEpisodeGraph = <T,>({
   title,
   data,
   xLabel,
@@ -31,7 +35,7 @@ export const MultiGraph = <T,>({
   width,
   getTooltipHtml,
   children,
-}: MultiGraphProps<T>) => {
+}: AllEpisodeGraphProps) => {
   const d3Container = useRef(null);
   const graphHeight = useMemo(
     () => height - margin.top - margin.bottom,
@@ -39,41 +43,10 @@ export const MultiGraph = <T,>({
   );
   const graphWidth = useMemo(() => width - margin.left - margin.right, [width]);
 
-  console.log('multi', data);
-
-  const worstRatings = useMemo(
-    () =>
-      data.map(
-        (inner) =>
-          getWorst<Data<T> & { rating: number }>('x')(
-            inner.map((data) => ({ ...data, rating: data.y }))
-          ).rating
-      ),
-    [data]
-  );
-
-  const bestRatings = useMemo(
-    () =>
-      data.map(
-        (inner) =>
-          getBest<Data<T> & { rating: number }>('x')(
-            inner.map((data) => ({ ...data, rating: data.y }))
-          ).rating
-      ),
-    [data]
-  );
-
-  const normalizeRating = useCallback(
-    (index: number, rating: number) =>
-      ratingNormalizer(worstRatings[index], bestRatings[index])(rating) / 1.2,
-    [bestRatings, worstRatings]
-  );
-
   useEffect(() => {
     if (d3Container.current && data) {
       const flattenedData = data.flatMap((data) => data);
 
-      console.log('flattened', flattenedData);
       d3.select(d3Container.current).selectAll('*').remove();
 
       const tooltip = d3.select('div.tooltip');
@@ -101,7 +74,11 @@ export const MultiGraph = <T,>({
               d3.range(
                 1,
                 flattenedData.length + 1,
-                flattenedData.length > 15 ? 4 : 1
+                flattenedData.length > 15
+                  ? flattenedData.length > 50
+                    ? 50
+                    : 4
+                  : 1
               )
             )
         )
@@ -111,12 +88,12 @@ export const MultiGraph = <T,>({
       const y = d3.scaleLinear().domain([0, 10]).range([graphHeight, 0]);
 
       data.forEach((season, index) => {
-        console.log(index + 1, season);
         createLOBF(
           season.map((s, index) => ({ ...s, x: index + 1 })),
           svg,
           x,
           y,
+          d3.schemePaired[(index + 1) % d3.schemePaired.length],
           index > 0 ? data[index - 1][data[index - 1].length - 1].x : 0
         );
       });
@@ -139,11 +116,19 @@ export const MultiGraph = <T,>({
         .attr('r', 5)
         .attr('cx', (d) => x(d.x) ?? '')
         .attr('cy', (d) => y(d.y))
-        // .attr('fill', (d) => d3.interpolateRdBu(normalizeRating(d.y)))
-        .attr('fill', 'white')
+        .attr(
+          'fill',
+          (d) => d3.schemePaired[d.extra.season % d3.schemePaired.length]
+        )
         .on('mouseover', function (event, d) {
           d3.select(this).attr('r', 10);
           tooltip
+            .style(
+              'border',
+              `3px solid ${
+                d3.schemePaired[d.extra.season % d3.schemePaired.length]
+              }`
+            )
             .transition()
             .duration(200)
             .style('opacity', 0.9)
@@ -187,7 +172,7 @@ export const MultiGraph = <T,>({
         document.removeEventListener('scroll', handleScroll);
       };
     }
-  }, [data, getTooltipHtml, graphHeight, graphWidth, normalizeRating, xLabel]);
+  }, [data, getTooltipHtml, graphHeight, graphWidth, xLabel]);
 
   return (
     <div className="bg-neutral-900 p-5 pb-0 px-0 shadow-2xl rounded mb-10">
