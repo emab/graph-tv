@@ -3,7 +3,6 @@ import { SeasonAverageData, SeasonEpisodeData } from '@/types/searchResult';
 import { Graph } from './Graph';
 import { SeasonHighlights } from '@/components/SeasonHighlights';
 import { ShowHighlights } from './ShowHighlights';
-import { MultiGraph } from '@/components/MultiGraph';
 
 const getGraphWidth = (container: HTMLDivElement): number =>
   container?.clientWidth - 10 ?? 0;
@@ -45,23 +44,6 @@ const GraphDisplay = ({ data }: { data: Data }) => {
 
   return (
     <div className="m-5 mx-2 md:mx-14 lg:mx-28" ref={ref}>
-      <MultiGraph
-        title=""
-        data={data.seasonEpisodeRatings.map((season) =>
-          season.map((episode) => ({
-            x: episode.overallEpisode,
-            y: episode.rating,
-            extra: {
-              name: episode.name,
-              seasonEpisode: episode.episode,
-            },
-          }))
-        )}
-        xLabel=""
-        height={400}
-        width={graphWidth}
-        getTooltipHtml={() => ''}
-      />
       <h2 className="text-4xl text-center text-white mb-4">
         Average Season Ratings
       </h2>
