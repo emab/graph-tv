@@ -1,12 +1,6 @@
-import {
-  getBestEpisode,
-  getBestSeason,
-  getWorstEpisode,
-  getWorstSeason,
-} from '@/utils/dataTools';
-import { SeasonAverageData, SeasonEpisodeData } from '@/types/searchResult';
-import { calculateMean } from '@/utils/createLOBF';
-import { FaBalanceScale, FaThumbsDown, FaThumbsUp } from 'react-icons/fa';
+import { getBestSeason, getWorstSeason } from '@/utils/dataTools';
+import { SeasonAverageData } from '@/types/searchResult';
+import { FaThumbsDown, FaThumbsUp } from 'react-icons/fa';
 
 type ShowHighlightsProps = {
   seasonData: SeasonAverageData[];
@@ -20,7 +14,7 @@ export const ShowHighlights = ({ seasonData }: ShowHighlightsProps) => {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 p-5 bg-neutral-600">
       <div className="text-center">
         <h2 className="text-2xl inline-flex">
-          Best <FaThumbsUp className="ml-2 text-green-600" />
+          Best <FaThumbsUp className="ml-2 text-blue-400" />
         </h2>
         <p>Season: {bestSeason.season}</p>
         <p>Rating: {bestSeason.rating}</p>

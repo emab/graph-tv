@@ -91,13 +91,13 @@ export default function Home() {
         <FloatingLinks />
         <div
           className={cx(
-            'relative bg-gray-800 py-5 flex flex-col cursor-pointer items-center select-none hover:text-blue-100',
+            'relative bg-gray-800 py-5 flex flex-col cursor-pointer items-center select-none',
             !showSearch && 'hover:opacity-100 hover:text-xl'
           )}
         >
           <h1
             className={cx(
-              'text-5xl font-bold opacity-100',
+              'text-5xl font-bold opacity-100 hover:text-blue-100',
               showSearch ? 'pb-5' : 'pb-2'
             )}
             onClick={() => setShowSearch(!showSearch)}
