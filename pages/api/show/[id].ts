@@ -10,6 +10,11 @@ type EpisodeData = {
   vote_average: number;
 };
 
+type SeasonData = {
+  season_number: number;
+  episodes: EpisodeData[];
+}[];
+
 const getSeason = async (url: string) => {
   const res = await fetch(url);
 
@@ -41,10 +46,7 @@ export default async function handler(
     bufferCount(json.seasons.length)
   );
 
-  const result = (await firstValueFrom(source)) as {
-    season_number: number;
-    episodes: EpisodeData[];
-  }[];
+  const result = (await firstValueFrom(source)) as SeasonData;
 
   const sortedResult = result
     .sort((s1, s2) => s1.season_number - s2.season_number)
@@ -55,8 +57,29 @@ export default async function handler(
     rating: getSeasonAverage(season.episodes),
   }));
 
-  const seasonEpisodeRatings = sortedResult.map((season) =>
+  const getOverallEpisode = (
+    allSeasons: SeasonData,
+    seasonIndex: number,
+    currentEpisodeNumber: number
+  ) => {
+    if (seasonIndex === 0) {
+      return currentEpisodeNumber;
+    }
+    let episodeNumber = currentEpisodeNumber;
+    for (let i = seasonIndex - 1; i >= 0; i--) {
+      const prevSeason = allSeasons[i];
+      episodeNumber += prevSeason.episodes.length;
+    }
+    return episodeNumber;
+  };
+
+  const seasonEpisodeRatings = sortedResult.map((season, seasonIndex) =>
     season.episodes.map((episode) => ({
+      overallEpisode: getOverallEpisode(
+        sortedResult,
+        seasonIndex,
+        episode.episode_number
+      ),
       episode: episode.episode_number,
       rating: episode.vote_average,
       name: episode.name,

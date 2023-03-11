@@ -56,17 +56,17 @@ export const createLOBF = (
   values: { x: number; y: number }[],
   svg: d3.Selection<SVGGElement, unknown, HTMLElement, string>,
   x: (x: number) => number | undefined,
-  y: (y: number) => number
+  y: (y: number) => number,
+  offset?: number
 ) => {
   const [{ x0, y0 }, { x1, y1 }] = calculateLOBF(values);
 
   svg
     .append('line')
     .attr('class', 'lobf')
-    // .style('stroke-width', 1)
     .style('z-index', 0)
-    .attr('x1', String(x(x0)))
+    .attr('x1', String(x(x0 + (offset ?? 0))))
     .attr('y1', y(y0))
-    .attr('x2', String(x(x1)))
+    .attr('x2', String(x(x1 + (offset ?? 0))))
     .attr('y2', y(y1));
 };

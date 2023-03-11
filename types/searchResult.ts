@@ -7,6 +7,11 @@ export type SearchResult = {
 
 export type SeasonAverageData = { season: number; rating: number };
 
-export type EpisodeData = { name: string; episode: number; rating: number };
+export type EpisodeData = {
+  name: string;
+  episode: number;
+  rating: number;
+  overallEpisode: number;
+};
 
 export type SeasonEpisodeData = EpisodeData[];
