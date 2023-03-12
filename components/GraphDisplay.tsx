@@ -5,6 +5,7 @@ import { SeasonHighlights } from '@/components/SeasonHighlights';
 import { ShowHighlights } from './ShowHighlights';
 import { AllEpisodeGraph } from './AllEpisodeGraph';
 import { AllEpisodeSummary } from '@/components/AllEpisodeSummary';
+import { SeasonSelector } from '@/components/SeasonSelector';
 
 const getGraphWidth = (container: HTMLDivElement): number =>
   container?.clientWidth - 10 ?? 0;
@@ -66,6 +67,7 @@ const GraphDisplay = ({ data }: { data: Data }) => {
       >
         <AllEpisodeSummary data={data.seasonEpisodeRatings} />
       </AllEpisodeGraph>
+      <SeasonSelector seasonCount={data.seasonAverageRatings.length} />
       <h2 className="text-4xl text-center text-white mb-4">
         Average Season Ratings
       </h2>
@@ -105,6 +107,8 @@ const GraphDisplay = ({ data }: { data: Data }) => {
                 }
                 width={graphWidth}
                 height={400}
+                id={`season-${index + 1}`}
+                key={`season-${index + 1}`}
               >
                 <SeasonHighlights seasonEpisodes={seasonEpisodes} />
               </Graph>

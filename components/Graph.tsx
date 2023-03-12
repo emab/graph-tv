@@ -20,6 +20,7 @@ type GraphProps<T> = {
   height: number;
   width: number;
   getTooltipHtml: (d: Data<T>) => string;
+  id?: string;
   children?: ReactNode;
 };
 
@@ -30,6 +31,7 @@ export const Graph = <T,>({
   height,
   width,
   getTooltipHtml,
+  id,
   children,
 }: GraphProps<T>) => {
   const d3Container = useRef(null);
@@ -162,7 +164,10 @@ export const Graph = <T,>({
   }, [data, getTooltipHtml, graphHeight, graphWidth, normalizeRating, xLabel]);
 
   return (
-    <div className="bg-neutral-900 p-5 pb-0 px-0 shadow-2xl rounded mb-10">
+    <div
+      id={id}
+      className="bg-neutral-900 p-5 pb-0 px-0 shadow-2xl rounded mb-10"
+    >
       <h2 className="text-2xl font-bold text-center text-white my-2">
         {title}
       </h2>
