@@ -118,6 +118,7 @@ export const Graph = <T,>({
         .on('mouseover', function (event, d) {
           d3.select(this).attr('r', 10);
           tooltip
+            .style('border-color', d3.interpolateRdBu(normalizeRating(d.y)))
             .transition()
             .duration(200)
             .style('opacity', 0.9)
