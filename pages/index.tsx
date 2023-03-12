@@ -21,7 +21,7 @@ const getSeasonData = async (id: number | undefined) => {
 };
 
 export default function Home() {
-  const { query, push, asPath } = useRouter();
+  const { query, asPath } = useRouter();
   const [selectedShowId, setSelectedShowId] = useState<number>();
   const [showSearch, setShowSearch] = useState(true);
   const { setParam } = useSearchParams();
@@ -33,12 +33,6 @@ export default function Home() {
       }
     }
   }, [query, asPath]);
-
-  useEffect(() => {
-    if (selectedShowId && selectedShowId !== Number(query?.showId)) {
-      setParam('showId', selectedShowId);
-    }
-  }, [push, query, selectedShowId, setParam]);
 
   useEffect(() => {
     d3.select('body').append('div').attr('class', 'tooltip');
@@ -53,7 +47,13 @@ export default function Home() {
   const { data, isLoading } = useQuery<Data>(
     ['getSeasonData', selectedShowId],
     () => getSeasonData(selectedShowId),
-    { enabled: !!selectedShowId, onSuccess: () => setShowSearch(false) }
+    {
+      enabled: !!selectedShowId,
+      onSuccess: () => {
+        selectedShowId && setParam('showId', selectedShowId);
+        setShowSearch(false);
+      },
+    }
   );
 
   useEffect(() => {
