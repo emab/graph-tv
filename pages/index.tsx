@@ -85,7 +85,6 @@ export default function Home() {
           >
             Graph TV
           </h1>
-
           <FaChevronDown
             className={cx(
               'opacity-60 absolute hover:opacity-100 text-blue-100 hover:text-xl cursor-pointer transition-all',
