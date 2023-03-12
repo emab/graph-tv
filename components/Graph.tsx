@@ -116,7 +116,7 @@ export const Graph = <T,>({
         .attr('cy', (d) => y(d.y))
         .attr('fill', (d) => d3.interpolateRdBu(normalizeRating(d.y)))
         .on('mouseover', function (event, d) {
-          d3.select(this).attr('r', 10);
+          d3.select(this).transition().duration(150).attr('r', 10);
           tooltip
             .style('border-color', d3.interpolateRdBu(normalizeRating(d.y)))
             .transition()
@@ -136,7 +136,7 @@ export const Graph = <T,>({
             .style('z-index', '10');
         })
         .on('mouseout', function () {
-          d3.select(this).attr('r', 5);
+          d3.select(this).transition().duration(200).attr('r', 5);
           tooltip.transition().duration(500).style('opacity', 0);
         });
 
@@ -153,7 +153,7 @@ export const Graph = <T,>({
         .text('Rating');
 
       const handleScroll = () => {
-        svg.selectAll('circle').attr('r', 5).transition().duration(200);
+        svg.selectAll('circle').transition().duration(200).attr('r', 5);
       };
 
       document.addEventListener('scroll', handleScroll);

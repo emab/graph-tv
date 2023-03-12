@@ -1,12 +1,5 @@
-import React, {
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-} from 'react';
+import React, { ReactNode, useEffect, useMemo, useRef } from 'react';
 import * as d3 from 'd3';
-import { normalizer } from '@/utils/dataTools';
 import { createLOBF } from '@/utils/createLOBF';
 
 const margin = { top: 5, right: 50, bottom: 20, left: 40 };
@@ -74,11 +67,7 @@ export const AllEpisodeGraph = <T,>({
               d3.range(
                 1,
                 flattenedData.length + 1,
-                flattenedData.length > 15
-                  ? flattenedData.length > 50
-                    ? 50
-                    : 4
-                  : 1
+                Math.floor(flattenedData.length / 16)
               )
             )
         )
@@ -121,7 +110,7 @@ export const AllEpisodeGraph = <T,>({
           (d) => d3.schemePaired[d.extra.season % d3.schemePaired.length]
         )
         .on('mouseover', function (event, d) {
-          d3.select(this).attr('r', 10);
+          d3.select(this).transition().duration(150).attr('r', 10);
           tooltip
             .style(
               'border',
@@ -146,7 +135,7 @@ export const AllEpisodeGraph = <T,>({
             .style('z-index', '10');
         })
         .on('mouseout', function () {
-          d3.select(this).attr('r', 5);
+          d3.select(this).transition().duration(200).attr('r', 5);
           tooltip.transition().duration(500).style('opacity', 0);
         });
 
@@ -163,7 +152,8 @@ export const AllEpisodeGraph = <T,>({
         .text('Rating');
 
       const handleScroll = () => {
-        svg.selectAll('circle').attr('r', 5).transition().duration(200);
+        svg.selectAll('circle').transition().duration(200).attr('r', 5);
+        tooltip.transition().duration(200).style('opacity', 0);
       };
 
       document.addEventListener('scroll', handleScroll);
