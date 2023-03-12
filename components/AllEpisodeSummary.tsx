@@ -1,10 +1,5 @@
 import { FaThumbsDown, FaThumbsUp } from 'react-icons/fa';
-import {
-  getBest,
-  getBestEpisode,
-  getWorst,
-  getWorstEpisode,
-} from '@/utils/dataTools';
+import { getBest, getWorst } from '@/utils/dataTools';
 import { EpisodeData } from '@/types/searchResult';
 
 type AllEpisodeDataProps = {

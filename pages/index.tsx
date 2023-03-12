@@ -12,6 +12,7 @@ import { SelectionInfo } from '@/components/SelectionInfo';
 import { useRouter } from 'next/router';
 import { FaChevronDown } from 'react-icons/fa';
 import cx from 'classnames';
+import { useSearchParams } from '@/hooks/useSearchParams';
 
 const getSeasonData = async (id: number | undefined) => {
   if (typeof id !== 'number') return Promise.resolve(null);
@@ -20,9 +21,10 @@ const getSeasonData = async (id: number | undefined) => {
 };
 
 export default function Home() {
-  const { query, push } = useRouter();
+  const { query, push, asPath } = useRouter();
   const [selectedShowId, setSelectedShowId] = useState<number>();
   const [showSearch, setShowSearch] = useState(true);
+  const { setParam } = useSearchParams();
 
   useEffect(() => {
     if (query?.showId) {
@@ -30,13 +32,13 @@ export default function Home() {
         setSelectedShowId(Number(query.showId));
       }
     }
-  }, [query]);
+  }, [query, asPath]);
 
   useEffect(() => {
     if (selectedShowId && selectedShowId !== Number(query?.showId)) {
-      void push(`/?showId=${selectedShowId}`);
+      setParam('showId', selectedShowId);
     }
-  }, [push, query, selectedShowId]);
+  }, [push, query, selectedShowId, setParam]);
 
   useEffect(() => {
     d3.select('body').append('div').attr('class', 'tooltip');
@@ -53,6 +55,14 @@ export default function Home() {
     () => getSeasonData(selectedShowId),
     { enabled: !!selectedShowId, onSuccess: () => setShowSearch(false) }
   );
+
+  useEffect(() => {
+    const season = asPath.split('#')[1];
+
+    if (season && !!data) {
+      document.getElementById(season)?.scrollIntoView();
+    }
+  }, [asPath, data]);
 
   const episodeCount =
     data?.seasonEpisodeRatings.reduce((acc, next) => acc + next.length, 0) ?? 0;
