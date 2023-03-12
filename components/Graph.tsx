@@ -167,7 +167,7 @@ export const Graph = <T,>({
   return (
     <div
       id={id}
-      className="bg-neutral-900 p-5 pb-0 px-0 shadow-2xl rounded mb-10"
+      className="bg-neutral-900 p-5 pb-0 px-0 shadow-2xl rounded mt-10"
     >
       <h2 className="text-2xl font-bold text-center text-white my-2">
         {title}

@@ -10,8 +10,6 @@ export const useSearchParams = () => {
 
       params.set(key, String(value));
 
-      console.log(params.toString());
-
       void push(`?${params.toString()}`);
     },
     [asPath, push]

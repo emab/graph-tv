@@ -87,7 +87,7 @@ const GraphDisplay = ({ data }: { data: Data }) => {
       >
         <ShowHighlights seasonData={data.seasonAverageRatings} />
       </Graph>
-      <div className="mt-10">
+      <div className="mt-10 pb-2">
         <h2 className="text-4xl text-center text-white mb-4">Season Ratings</h2>
         {data?.seasonEpisodeRatings.map((seasonEpisodes, index) => {
           return (
