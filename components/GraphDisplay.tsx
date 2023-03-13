@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { SeasonAverageData, SeasonEpisodeData } from '@/types/searchResult';
-import { Graph } from './Graph';
+import { Graph, RateEpisodeState } from './Graph';
 import { SeasonHighlights } from '@/components/SeasonHighlights';
 import { ShowHighlights } from './ShowHighlights';
 import { AllEpisodeGraph } from './AllEpisodeGraph';
 import { AllEpisodeSummary } from '@/components/AllEpisodeSummary';
 import { SeasonSelector } from '@/components/SeasonSelector';
+import { Modal } from '@/components/Modal';
+import { RateEpisode } from './RateEpisode';
 
 const getGraphWidth = (container: HTMLDivElement): number =>
   container?.clientWidth - 10 ?? 0;
@@ -17,9 +19,10 @@ export type Data = {
   seasonEpisodeRatings: SeasonEpisodeData[];
 };
 
-const GraphDisplay = ({ data }: { data: Data }) => {
+const GraphDisplay = ({ data, showId }: { data: Data; showId: number }) => {
   const ref = useRef(null);
   const [graphWidth, setGraphWidth] = useState(0);
+  const [showRatingModal, setShowRatingModal] = useState<RateEpisodeState>();
 
   useEffect(() => {
     const currentRef = ref.current;
@@ -45,6 +48,31 @@ const GraphDisplay = ({ data }: { data: Data }) => {
 
   return (
     <div className="m-5 mx-2 md:mx-14 lg:mx-28" ref={ref}>
+      {!!showRatingModal && (
+        <Modal handleClose={() => setShowRatingModal(undefined)}>
+          <div className="text-center px-4 md:pb-5">
+            <h2 className="text-4xl">Rate episode</h2>
+            <p className="text-lg mt-2">
+              {
+                data.seasonEpisodeRatings[showRatingModal.season - 1][
+                  showRatingModal.episode - 1
+                ].name
+              }
+            </p>
+            <p className="italic">
+              Season: {showRatingModal.season}
+              {' - '}Episode: {showRatingModal.episode}
+            </p>
+            <div className="mt-10">
+              <RateEpisode
+                episode={showRatingModal.episode}
+                season={showRatingModal.season}
+                showId={showId}
+              />
+            </div>
+          </div>
+        </Modal>
+      )}
       <AllEpisodeGraph
         title=""
         getTooltipHtml={(d) =>
@@ -61,9 +89,11 @@ const GraphDisplay = ({ data }: { data: Data }) => {
               name: episode.name,
               season: index + 1,
               actualEpisode: episode.episode,
+              jumpToSeasonOnClick: false,
             },
           }))
         )}
+        setShowRatingModal={setShowRatingModal}
       >
         <AllEpisodeSummary data={data.seasonEpisodeRatings} />
       </AllEpisodeGraph>
@@ -77,7 +107,12 @@ const GraphDisplay = ({ data }: { data: Data }) => {
           data.seasonAverageRatings.map((d) => ({
             x: d.season,
             y: d.rating,
-            extra: undefined,
+            extra: {
+              season: d.season,
+              name: '',
+              actualEpisode: 0,
+              jumpToSeasonOnClick: true,
+            },
           })) ?? []
         }
         xLabel="Season"
@@ -99,16 +134,20 @@ const GraphDisplay = ({ data }: { data: Data }) => {
                   y: value.rating,
                   extra: {
                     name: value.name,
+                    season: index + 1,
+                    actualEpisode: value.overallEpisode,
+                    jumpToSeasonOnClick: false,
                   },
                 }))}
                 xLabel="Episode"
                 getTooltipHtml={(d) =>
-                  `<span class='font-bold'>${d.extra.name}</span></br><span class='text-neutral-200'>Episode: ${d.x}</span></br><span class='text-neutral-200'>Rating: ${d.y}</span>`
+                  `<span class='font-bold'>${d.extra?.name}</span></br><span class='text-neutral-200'>Episode: ${d.x}</span></br><span class='text-neutral-200'>Rating: ${d.y}</span>`
                 }
                 width={graphWidth}
                 height={400}
                 id={`season-${index + 1}`}
                 key={`season-${index + 1}`}
+                setShowRatingModal={setShowRatingModal}
               >
                 <SeasonHighlights seasonEpisodes={seasonEpisodes} />
               </Graph>

@@ -104,7 +104,7 @@ export default function Home() {
                 seasonCount={data.seasonAverageRatings.length}
                 overallRating={data.averageRating}
               />
-              <GraphDisplay data={data} />
+              <GraphDisplay data={data} showId={selectedShowId} />
             </>
           ) : (
             <NoData />

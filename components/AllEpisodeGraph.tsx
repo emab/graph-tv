@@ -1,13 +1,20 @@
-import React, { ReactNode, useEffect, useMemo, useRef } from 'react';
+import React, { Dispatch, ReactNode, useEffect, useMemo, useRef } from 'react';
 import * as d3 from 'd3';
 import { createLOBF } from '@/utils/createLOBF';
+import { useRouter } from 'next/router';
+import { RateEpisodeState } from '@/components/Graph';
 
 const margin = { top: 5, right: 50, bottom: 20, left: 40 };
 
 type Data = {
   x: number;
   y: number;
-  extra: { name: string; season: number; actualEpisode: number };
+  extra: {
+    name: string;
+    season: number;
+    actualEpisode: number;
+    jumpToSeasonOnClick: boolean;
+  };
 };
 
 type AllEpisodeGraphProps = {
@@ -17,6 +24,9 @@ type AllEpisodeGraphProps = {
   height: number;
   width: number;
   getTooltipHtml: (d: Data) => string;
+  setShowRatingModal?: Dispatch<
+    React.SetStateAction<RateEpisodeState | undefined>
+  >;
   children?: ReactNode;
 };
 
@@ -27,8 +37,10 @@ export const AllEpisodeGraph = <T,>({
   height,
   width,
   getTooltipHtml,
+  setShowRatingModal,
   children,
 }: AllEpisodeGraphProps) => {
+  const { push } = useRouter();
   const d3Container = useRef(null);
   const graphHeight = useMemo(
     () => height - margin.top - margin.bottom,
@@ -105,6 +117,7 @@ export const AllEpisodeGraph = <T,>({
         .attr('r', 5)
         .attr('cx', (d) => x(d.x) ?? '')
         .attr('cy', (d) => y(d.y))
+        .style('cursor', 'pointer')
         .attr(
           'fill',
           (d) => d3.schemePaired[d.extra.season % d3.schemePaired.length]
@@ -137,6 +150,23 @@ export const AllEpisodeGraph = <T,>({
         .on('mouseout', function () {
           d3.select(this).transition().duration(200).attr('r', 5);
           tooltip.transition().duration(500).style('opacity', 0);
+        })
+        .on('click', function (e, d) {
+          if (d.extra?.season && d.extra?.jumpToSeasonOnClick) {
+            return push(`#season-${d.extra.season}`);
+          }
+          d3.select(this)
+            .transition()
+            .duration(200)
+            .attr('r', 20)
+            .transition()
+            .duration(150)
+            .attr('r', 10);
+          tooltip.transition().duration(100).style('opacity', 0);
+          setShowRatingModal?.({
+            season: d.extra.season,
+            episode: d.extra.actualEpisode,
+          });
         });
 
       // Y-axis label
@@ -162,7 +192,15 @@ export const AllEpisodeGraph = <T,>({
         document.removeEventListener('scroll', handleScroll);
       };
     }
-  }, [data, getTooltipHtml, graphHeight, graphWidth, xLabel]);
+  }, [
+    data,
+    getTooltipHtml,
+    graphHeight,
+    graphWidth,
+    push,
+    setShowRatingModal,
+    xLabel,
+  ]);
 
   return (
     <div className="bg-neutral-900 p-5 pb-0 px-0 shadow-2xl rounded mb-10">
