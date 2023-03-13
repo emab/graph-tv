@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MobileModal } from '@/components/MobileModal';
+import { Modal } from '@/components/Modal';
 
 type SeasonSelectorProps = {
   seasonCount: number;
@@ -31,7 +31,7 @@ export const SeasonSelector = ({ seasonCount }: SeasonSelectorProps) => {
           Select season
         </button>
         {showModal && (
-          <MobileModal handleClose={() => setShowModal(false)}>
+          <Modal handleClose={() => setShowModal(false)}>
             <h2 className="text-2xl font-medium mb-2 text-center">
               Select season
             </h2>
@@ -49,7 +49,7 @@ export const SeasonSelector = ({ seasonCount }: SeasonSelectorProps) => {
                 </a>
               ))}
             </div>
-          </MobileModal>
+          </Modal>
         )}
       </div>
     </div>

@@ -1,4 +1,5 @@
 import React, {
+  Dispatch,
   ReactNode,
   useCallback,
   useEffect,
@@ -8,19 +9,27 @@ import React, {
 import * as d3 from 'd3';
 import { createLOBF } from '@/utils/createLOBF';
 import { getBest, getWorst, normalizer } from '@/utils/dataTools';
+import { Data } from '@/types/graphData';
+import { useRouter } from 'next/router';
 
 const margin = { top: 5, right: 50, bottom: 20, left: 40 };
 
-type Data<T> = { x: number; y: number; extra: T };
+export type RateEpisodeState = {
+  season: number;
+  episode: number;
+};
 
-type GraphProps<T> = {
+type GraphProps = {
   title: string;
-  data: Data<T>[];
+  data: Data[];
   xLabel: string;
   height: number;
   width: number;
-  getTooltipHtml: (d: Data<T>) => string;
+  getTooltipHtml: (d: Data) => string;
   id?: string;
+  setShowRatingModal?: Dispatch<
+    React.SetStateAction<RateEpisodeState | undefined>
+  >;
   children?: ReactNode;
 };
 
@@ -32,8 +41,10 @@ export const Graph = <T,>({
   width,
   getTooltipHtml,
   id,
+  setShowRatingModal,
   children,
-}: GraphProps<T>) => {
+}: GraphProps) => {
+  const { push } = useRouter();
   const d3Container = useRef(null);
   const graphHeight = useMemo(
     () => height - margin.top - margin.bottom,
@@ -43,7 +54,7 @@ export const Graph = <T,>({
 
   const worstRating = useMemo(
     () =>
-      getWorst<Data<T> & { rating: number }>('x')(
+      getWorst<Data & { rating: number }>('x')(
         data.map((data) => ({ ...data, rating: data.y }))
       ).rating,
     [data]
@@ -51,7 +62,7 @@ export const Graph = <T,>({
 
   const bestRating = useMemo(
     () =>
-      getBest<Data<T> & { rating: number }>('x')(
+      getBest<Data & { rating: number }>('x')(
         data.map((data) => ({ ...data, rating: data.y }))
       ).y,
     [data]
@@ -115,6 +126,7 @@ export const Graph = <T,>({
         .attr('cx', (d) => x(d.x) ?? '')
         .attr('cy', (d) => y(d.y))
         .attr('fill', (d) => d3.interpolateRdBu(normalizeRating(d.y)))
+        .style('cursor', 'pointer')
         .on('mouseover', function (event, d) {
           d3.select(this).transition().duration(150).attr('r', 10);
           tooltip
@@ -138,6 +150,23 @@ export const Graph = <T,>({
         .on('mouseout', function () {
           d3.select(this).transition().duration(200).attr('r', 5);
           tooltip.transition().duration(500).style('opacity', 0);
+        })
+        .on('click', function (e, d) {
+          if (d.extra?.season && d.extra?.jumpToSeasonOnClick) {
+            return push(`#season-${d.extra.season}`);
+          }
+          d3.select(this)
+            .transition()
+            .duration(200)
+            .attr('r', 20)
+            .transition()
+            .duration(150)
+            .attr('r', 10);
+          tooltip.transition().duration(100).style('opacity', 0);
+          setShowRatingModal?.({
+            season: d.extra.season,
+            episode: d.x,
+          });
         });
 
       // Y-axis label
@@ -162,7 +191,16 @@ export const Graph = <T,>({
         document.removeEventListener('scroll', handleScroll);
       };
     }
-  }, [data, getTooltipHtml, graphHeight, graphWidth, normalizeRating, xLabel]);
+  }, [
+    data,
+    getTooltipHtml,
+    graphHeight,
+    graphWidth,
+    normalizeRating,
+    push,
+    setShowRatingModal,
+    xLabel,
+  ]);
 
   return (
     <div

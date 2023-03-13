@@ -26,12 +26,13 @@ const getSeasonAverage = (episodes: EpisodeData[]) =>
     episodes.reduce((acc, next) => acc + next.vote_average, 0) / episodes.length
   ).toFixed(2);
 
-export default async function handler(
+const handleGetShow = async (
   req: NextApiRequest,
-  res: NextApiResponse
-) {
+  res: NextApiResponse,
+  showId: string
+) => {
   const results = await fetch(
-    BASE_URL + `/tv/${req.query.id}?api_key=${process.env.API_KEY}`
+    BASE_URL + `/tv/${showId}?api_key=${process.env.API_KEY}`
   );
   const json = await results.json();
 
@@ -40,7 +41,7 @@ export default async function handler(
   const source = from(seasons).pipe(
     mergeMap((season) =>
       getSeason(
-        `${BASE_URL}/tv/${req.query.id}/season/${season.season_number}?api_key=${process.env.API_KEY}`
+        `${BASE_URL}/tv/${showId}/season/${season.season_number}?api_key=${process.env.API_KEY}`
       )
     ),
     bufferCount(json.seasons.length)
@@ -93,4 +94,56 @@ export default async function handler(
     seasonAverageRatings,
     seasonEpisodeRatings,
   });
+};
+
+const rateShow = async (
+  guestSessionId: string,
+  showId: string,
+  season: string,
+  episode: string,
+  rating: string
+) =>
+  fetch(
+    BASE_URL +
+      `/tv/${showId}/season/${season}/episode/${episode}/rating?api_key=${process.env.API_KEY}&guest_session_id=${guestSessionId}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+      body: JSON.stringify({ value: Number(rating) }),
+    }
+  );
+
+const handleRateShow = async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+  showId: string
+) => {
+  const { guestSessionId, season, episode, rating } = req.body;
+
+  try {
+    await rateShow(guestSessionId, showId, season, episode, rating);
+    res.status(200);
+    res.json({ ok: true });
+  } catch (e) {
+    console.error(e);
+    res.status(500);
+  }
+};
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const [showId, command] = req.query.show as string[];
+
+  if (!command) {
+    return handleGetShow(req, res, showId);
+  }
+
+  switch (command) {
+    case 'rate':
+      return handleRateShow(req, res, showId);
+  }
 }
