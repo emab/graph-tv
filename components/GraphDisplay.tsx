@@ -10,7 +10,7 @@ import { Modal } from '@/components/Modal';
 import { RateEpisode } from './RateEpisode';
 
 const getGraphWidth = (container: HTMLDivElement): number =>
-  container?.clientWidth - 10 ?? 0;
+  container.clientWidth - 10;
 
 export type Data = {
   name: string;

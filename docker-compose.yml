@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  nextjs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nextjs-app:latest
+    container_name: nextjs-app
+    ports:
+      - "3033:3033"
+    env_file: .env.prod
+    environment:
+      NODE_ENV: production
+      PORT: 3033
+      HOSTNAME: graphtv.devbrown.com
+    restart: unless-stopped
