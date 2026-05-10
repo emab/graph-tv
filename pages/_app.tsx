@@ -37,6 +37,7 @@ export default function App({ Component, pageProps }: AppProps) {
           name="description"
           content="View a ratings graph of your favourite TV shows"
         />
+        <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "29aa27009b1e45aaa25d77ad88447989"}'></script>
       </Head>
       <Script
         id="heap"
